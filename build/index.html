@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Lab · Solo — MLBB (Emblem, Spell & Item)</title>
+<meta name="description" content="Rekomendasi emblem, battle spell, dan build item MLBB yang nyesuaiin sama comp lawan. 133 hero, patch 2.1.90. Bagian dari Draft Lab.">
+<link rel="canonical" href="https://mlbb.mzonetour.com/build/">
+<meta property="og:title" content="Build Lab · Solo — MLBB">
+<meta property="og:description" content="Emblem, spell & build item adaptif ke comp lawan — 133 hero, patch 2.1.90.">
+<meta property="og:url" content="https://mlbb.mzonetour.com/build/">
+<style>
+  :root{
+    --bg:#0b1120; --panel:#131b2e; --panel2:#0f1626; --line:#263452; --line2:#1b2740;
+    --tx:#e7edf7; --tx2:#93a3bf; --tx3:#5f7191;
+    --gold:#fbbf24; --gold2:#b45309;
+    --tank:#3b82f6; --fighter:#f97316; --assassin:#a855f7; --mage:#22d3ee; --marksman:#eab308; --support:#22c55e;
+    --red:#f87171; --ok:#34d399;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg); color:var(--tx); font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif; font-size:14px; line-height:1.45;
+    background-image:radial-gradient(1200px 500px at 80% -10%, rgba(251,191,36,.06), transparent 60%), radial-gradient(900px 420px at -10% 0%, rgba(34,211,238,.05), transparent 55%);}
+  .wrap{max-width:1180px; margin:0 auto; padding:18px 14px 60px;}
+  header{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px; border-bottom:1px solid var(--line); padding-bottom:14px;}
+  h1{font-size:22px; letter-spacing:.06em; text-transform:uppercase;}
+  h1 .g{color:var(--gold);}
+  .sub{color:var(--tx2); font-size:12.5px; margin-top:3px;}
+  .patch{font-size:11px; color:var(--gold); border:1px solid var(--gold2); border-radius:999px; padding:3px 10px; white-space:nowrap; background:rgba(251,191,36,.07);}
+  .cols{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:14px; align-items:start;}
+  @media(max-width:920px){ .cols{grid-template-columns:1fr;} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px;}
+  .ptitle{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .ptitle .n{background:var(--gold); color:#1a1305; width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:11px;}
+  .search{width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--tx); border-radius:8px; padding:9px 12px; font-size:14px; outline:none; margin-bottom:8px;}
+  .search:focus{border-color:var(--gold2);}
+  .rolefilter{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;}
+  .rchip{font-size:11px; padding:4px 9px; border-radius:999px; border:1px solid var(--line); color:var(--tx2); cursor:pointer; user-select:none; background:var(--panel2);}
+  .rchip.on{color:#0b1120; font-weight:700;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(94px,1fr)); gap:6px; max-height:300px; overflow-y:auto; padding-right:4px;}
+  .grid::-webkit-scrollbar{width:8px;} .grid::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+  .hbtn{position:relative; background:var(--panel2); border:1px solid var(--line2); border-radius:8px; padding:8px 6px 7px; text-align:center; cursor:pointer; font-size:12px; color:var(--tx); user-select:none; transition:border-color .12s, background .12s;}
+  .hbtn:hover{border-color:var(--gold2);}
+  .hbtn .dot{display:block; width:22px; height:22px; border-radius:50%; margin:0 auto 5px; font-size:10.5px; font-weight:700; line-height:22px; color:#0b1120;}
+  .hbtn.sel{border-color:var(--gold); background:rgba(251,191,36,.10); box-shadow:0 0 0 1px var(--gold);}
+  .hbtn.dis{opacity:.32; pointer-events:none;}
+  .selrow{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; min-height:30px;}
+  .schip{display:inline-flex; align-items:center; gap:6px; background:var(--panel2); border:1px solid var(--line); padding:4px 8px; border-radius:999px; font-size:12px;}
+  .schip b{font-weight:600;}
+  .schip .x{cursor:pointer; color:var(--tx3); font-weight:700; padding:0 2px;}
+  .schip .x:hover{color:var(--red);}
+  .mini{font-size:11.5px; color:var(--tx3);}
+  .lanes{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
+  .lane{font-size:11.5px; padding:4px 12px; border:1px solid var(--line); border-radius:999px; color:var(--tx2); cursor:pointer; background:var(--panel2);}
+  .lane.on{border-color:var(--gold); color:var(--gold); background:rgba(251,191,36,.08); font-weight:600;}
+  .clear{font-size:11.5px; color:var(--tx3); cursor:pointer; border:1px solid var(--line); border-radius:999px; padding:4px 10px; background:none;}
+  .clear:hover{color:var(--red); border-color:var(--red);}
+  /* threat chips */
+  .threats{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:7px;}
+  .tchip{background:var(--panel2); border:1px solid var(--line2); border-radius:9px; padding:8px 10px; cursor:pointer; user-select:none; position:relative;}
+  .tchip .tl{font-size:11.5px; color:var(--tx2); display:flex; justify-content:space-between; gap:4px;}
+  .tchip .tl .ov{font-size:9.5px; letter-spacing:.08em; color:var(--tx3);}
+  .tchip .lv{font-size:13px; font-weight:700; margin-top:2px;}
+  .tchip .bar{height:4px; border-radius:2px; background:var(--line2); margin-top:6px; overflow:hidden;}
+  .tchip .bar i{display:block; height:100%; width:0%; border-radius:2px; transition:width .18s;}
+  .tchip.lv0 .lv{color:var(--tx3);} .tchip.lv0 .bar i{width:4%; background:var(--tx3);}
+  .tchip.lv1 .lv{color:var(--ok);} .tchip.lv1 .bar i{width:38%; background:var(--ok);}
+  .tchip.lv2 .lv{color:var(--gold);} .tchip.lv2 .bar i{width:70%; background:var(--gold);}
+  .tchip.lv3 .lv{color:var(--red);} .tchip.lv3 .bar i{width:100%; background:var(--red);}
+  .tchip.forced{border-color:var(--gold2);}
+  .tchip.off{opacity:.55;}
+  .thint{font-size:11px; color:var(--tx3); margin-top:9px;}
+  /* output */
+  .placeholder{border:1px dashed var(--line); border-radius:12px; padding:34px 18px; text-align:center; color:var(--tx3); font-size:13.5px;}
+  .ocard{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px;}
+  .ohead{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .otag{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--gold);}
+  .big{font-size:18px; font-weight:700;}
+  .why{color:var(--tx2); font-size:12.5px; margin-top:2px;}
+  .trow{display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line2); align-items:flex-start;}
+  .tier{flex:0 0 44px; font-size:10px; color:var(--tx3); letter-spacing:.08em; text-transform:uppercase; padding-top:3px;}
+  .tname{font-weight:600; font-size:13.5px;}
+  .spgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media(max-width:560px){ .spgrid{grid-template-columns:1fr;} }
+  .spbox{background:var(--panel2); border:1px solid var(--line2); border-radius:9px; padding:10px 12px;}
+  .spbox .lab{font-size:10px; letter-spacing:.12em; color:var(--tx3); text-transform:uppercase;}
+  .spbox .nm{font-size:15.5px; font-weight:700; margin:2px 0 3px;}
+  .spbox.main{border-color:var(--gold2);} .spbox.main .nm{color:var(--gold);}
+  .irow{display:flex; gap:10px; padding:9px 0; border-top:1px solid var(--line2); align-items:flex-start;}
+  .ic{border-radius:7px; flex:0 0 auto; display:block; box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .icimg{display:inline-block; flex:0 0 auto; border-radius:7px; overflow:hidden; background:#0f1626; box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .icimg img{width:100%; height:100%; object-fit:contain; display:block;}
+  .trow .icimg{margin-top:1px;}
+  .icwrap{position:relative; flex:0 0 34px; margin-top:2px;}
+  .icwrap .slotno{position:absolute; top:-6px; left:-7px; width:16px; height:16px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); color:var(--tx2); font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; z-index:1;}
+  .spflex{display:flex; gap:9px; align-items:flex-start;}
+  .spflex .ic{margin-top:2px;}
+  .lane .st{color:var(--gold); margin-left:3px;}
+  .iname{font-weight:600; font-size:13.5px; display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .phase{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--tx3); border:1px solid var(--line); padding:1px 7px; border-radius:999px;}
+  .itag{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; padding:1px 7px; border-radius:999px; font-weight:700;}
+  .itag.core{color:var(--mage); border:1px solid rgba(34,211,238,.4);}
+  .itag.situasional{color:var(--gold); border:1px solid rgba(251,191,36,.4);}
+  .itag.damage{color:var(--tx2); border:1px solid var(--line);}
+  .itag.boots{color:var(--tx2); border:1px solid var(--line);}
+  ul.plain{list-style:none;}
+  ul.plain li{padding:7px 0 7px 20px; position:relative; color:var(--tx2); font-size:12.5px; border-top:1px solid var(--line2);}
+  ul.plain li::before{content:"▸"; position:absolute; left:4px; color:var(--gold);}
+  .notes{margin-top:8px;}
+  .vs{font-size:12px; color:var(--tx2); background:var(--panel2); border:1px solid var(--line2); border-radius:8px; padding:8px 10px; margin-bottom:10px;}
+  .vs b{color:var(--tx);}
+  footer{margin-top:26px; border-top:1px solid var(--line); padding-top:12px; color:var(--tx3); font-size:11px; line-height:1.6;}
+  .rolelegend{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; font-size:10.5px; color:var(--tx3);}
+  .rl{display:inline-flex; align-items:center; gap:4px;}
+  .rl i{width:8px; height:8px; border-radius:50%; display:inline-block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Build <span class="g">Lab</span> · Solo</h1>
+      <div class="sub">Emblem · Battle Spell · Item — nyesuaiin sama comp lawan. Satu keluarga sama Draft Lab.</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <a class="patch" href="/" style="text-decoration:none;">← Draft Lab</a>
+      <div class="patch">Data: 133 hero · patch 2.1.90 · Juli 2026</div>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div id="colLeft">
+      <div class="panel">
+        <div class="ptitle"><span class="n">1</span> Hero Lu</div>
+        <input type="text" class="search" id="qMe" placeholder="Cari hero lu... (contoh: aamon, lylia)">
+        <div class="rolefilter" id="rfMe"></div>
+        <div class="grid" id="gridMe"></div>
+        <div class="selrow" id="selMe"><span class="mini">Belum pilih hero.</span></div>
+        <div class="lanes" id="laneRow"></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle"><span class="n">2</span> Tim Lawan <span class="mini" style="text-transform:none;letter-spacing:0;">(sampai 5 — boleh cuma 1-2 yang lu takutin)</span></div>
+        <input type="text" class="search" id="qEn" placeholder="Cari hero lawan...">
+        <div class="rolefilter" id="rfEn"></div>
+        <div class="grid" id="gridEn"></div>
+        <div class="selrow" id="selEn"><span class="mini">Belum ada lawan dipilih.</span></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle"><span class="n">3</span> Profil Ancaman <span class="mini" style="text-transform:none;letter-spacing:0;">(klik buat override)</span></div>
+        <div class="threats" id="threats"></div>
+        <div class="thint">AUTO = kebaca dari hero lawan · klik 1x = paksa ON (merah) · klik 2x = matiin · klik 3x = balik AUTO. Ga mau milih hero lawan? Langsung paksa ON ancaman yang lu rasain aja.</div>
+      </div>
+    </div>
+
+    <div id="colRight">
+      <div id="out"></div>
+    </div>
+  </div>
+
+  <footer>
+    <b>Catatan:</b> Rekomendasi = titik awal yang masuk akal, bukan kitab suci — sesuaikan sama gaya main & kondisi match. Angka & nama berbasis patch 2.1.90 (Juli 2026): upgrade Retribution sekarang Ice/Flame/<b>Behemoth</b> Hunter's (Bloody Retribution ganti nama di Season 41), Dire Hit di-rework (stack Force pas gerak), Necklace of Durance & Twilight Armor udah dihapus (anti-heal magic di Glowing Wand; anti-AS di Chastise Pauldron), Winter Truncheon = Winter Crown, Bloodlust Axe melebur ke War Axe.
+    <div class="rolelegend" id="legend"></div>
+  </footer>
+</div>
+<script>
+// ==== DATA REFERENSI: EMBLEM, TALENT, SPELL, ITEM ====
+// Basis: patch ~2.1.8x (Juli 2026)
+
+const EMBLEMS = {
+  "Tank":     { base: "+500 HP, +10 Hybrid Defense, +4 HP Regen" },
+  "Assassin": { base: "+14 Adaptive Pen, +10 Adaptive Attack, +3% Move Speed" },
+  "Mage":     { base: "+30 Magic Power, +8 Magic Pen, +5% CDR" },
+  "Fighter":  { base: "+16 Adaptive Attack, +10% Hybrid Lifesteal, +8 Hybrid Defense" },
+  "Marksman": { base: "+15% Attack Speed, +16 Adaptive Attack, +10 Adaptive Pen" },
+  "Support":  { base: "+12% Healing Effect, +10% CDR, +6% Move Speed" },
+  "Common":   { base: "+275 HP, +22 Adaptive Attack, +12 Hybrid Regen" }
+};
+
+const TALENTS = {
+  // Tier 1
+  "Thrill":            { t: 1, e: "+16 Adaptive Attack" },
+  "Swift":             { t: 1, e: "+10% Attack Speed" },
+  "Vitality":          { t: 1, e: "+225 Max HP" },
+  "Firmness":          { t: 1, e: "+8 Physical & Magic Defense" },
+  "Agility":           { t: 1, e: "+4% Move Speed" },
+  "Rupture":           { t: 1, e: "+5 Adaptive Penetration" },
+  "Inspire":           { t: 1, e: "+5% CDR, +2 Mana Regen" },
+  "Fatal":             { t: 1, e: "+5% Crit Chance, +5% Crit Damage" },
+  // Tier 2
+  "Weapon Master":     { t: 2, e: "Attack/Magic Power dari item, emblem & skill +8%" },
+  "Pull Yourself Together": { t: 2, e: "CD battle spell & active item -12%" },
+  "Festival of Blood": { t: 2, e: "+6% Spell Vamp, +0.5% per kill/assist (max 12 stack)" },
+  "Bargain Hunter":    { t: 2, e: "Harga item -5% (spike item lebih cepat)" },
+  "Tenacity":          { t: 2, e: "+5% Damage Reduction saat HP < 50%" },
+  "Wilderness Blessing": { t: 2, e: "+10% Move Speed di river & jungle (rotasi cepat)" },
+  "Master Assassin":   { t: 2, e: "+7% damage ke musuh yang sendirian" },
+  "Seasoned Hunter":   { t: 2, e: "+15% damage ke Lord/Turtle" },
+  // Tier 3 (Core)
+  "Killing Spree":     { t: 3, e: "Serang hero <30% HP: pulih 15% lost HP + 20% MS; reset tiap kill" },
+  "Weakness Finder":   { t: 3, e: "Basic attack: slow 50% + potong attack speed musuh 30% (1s)" },
+  "Impure Rage":       { t: 3, e: "Damage skill +4% Max HP musuh (adaptive) + pulih mana" },
+  "Lethal Ignition":   { t: 3, e: "3x hit >7% HP musuh dalam 5s → bakar 162-750 adaptive dmg" },
+  "Quantum Charge":    { t: 3, e: "Basic attack: +30% MS 1.5s + pulih 75-180 HP" },
+  "Temporal Reign":    { t: 3, e: "Habis ulti: CD skill lain jalan 1.5x lebih cepat 4s" },
+  "Brave Smite":       { t: 3, e: "Damage skill ke hero: pulih 5% Max HP (CD 6s)" },
+  "Focusing Mark":     { t: 3, e: "Musuh yang lu serang: tim lu deal +6% damage ke dia" },
+  "Concussive Blast":  { t: 3, e: "Basic attack berikutnya: AoE magic dmg 100 + 7% Total HP" },
+  "War Cry":           { t: 3, e: "Hit hero 3x → semua damage +8% selama 6s" }
+};
+
+const SPELLS = {
+  "Retribution": "True dmg gede ke creep + akses jungle blessing (Ice/Flame/Bloody)",
+  "Execute":     "True damage 100+10/lvl +13% lost HP target — finisher, nembus shield",
+  "Flicker":     "Blink instan — escape/gap close paling fleksibel",
+  "Purify":      "Hapus semua CC + imun 1.2s + 15% MS — jawaban lawan lockdown",
+  "Aegis":       "Shield 750+90/lvl (5s) — nahan satu burst combo",
+  "Sprint":      "+50% MS + imun slow — kabur/kejar",
+  "Inspire":     "8 basic attack berikutnya attack speed x1.5",
+  "Vengeance":   "-35% damage diterima + reflect 35% (3s) — buat frontliner",
+  "Petrify":     "AoE stun 0.8s + slow — engage/peel",
+  "Flameshot":   "Poke jarak jauh + knockback musuh deket — peel assassin",
+  "Revitalize":  "Area heal ~2.5% Max HP/0.4s + boost shield/regen 25%",
+  "Arrival":     "Teleport ke turret/ally building — split push"
+};
+
+const BLESSINGS = {
+  "Ice Hunter's":      "Advanced Retribution: true dmg + curi Move Speed musuh 4 detik — nempel hero licin",
+  "Flame Hunter's":    "Advanced Retribution: true dmg + curi Physical & Magic Attack 4 detik — menang duel",
+  "Behemoth Hunter's": "Advanced Retribution: true dmg + curi HP (scaling bonus HP lu) — jungler tanky. Dulu: Bloody Retribution"
+};
+
+const ROAM = {
+  "Conceal":   "Camo 5s + MS buat tim — engage/pickoff",
+  "Encourage": "Buff attack & attack speed tim — teamfight 5v5",
+  "Favor":     "Heal/shield lu juga regen ally ter-lemah — buat healer",
+  "Dire Hit":  "Stack Force selama gerak → Move Speed + bonus damage basic attack — roam agresif"
+};
+
+// cat: atk | mag | def | boot
+const ITEMS = {
+  // ---- BOOTS ----
+  "Warrior Boots":  { c:"boot", e:"+22 Phys Def — lawan dominan fisik" },
+  "Tough Boots":    { c:"boot", e:"+22 Magic Def + CC duration -30% — lawan CC/magic" },
+  "Magic Shoes":    { c:"boot", e:"+10% CDR — spam skill" },
+  "Arcane Boots":   { c:"boot", e:"+10 Magic Pen — damage mage dari early" },
+  "Swift Boots":    { c:"boot", e:"+15% Attack Speed — MM basic attack" },
+  "Demon Shoes":    { c:"boot", e:"+6 Mana Regen — hero haus mana" },
+  "Rapid Boots":    { c:"boot", e:"MS tertinggi — roamer/rotasi" },
+  // ---- ATTACK ----
+  "Blade of Despair":       { c:"atk", e:"+160 Phys Atk; +25% dmg ke musuh <50% HP — item damage terbesar" },
+  "Berserker's Fury":       { c:"atk", e:"+65 PA, +25% crit, +40% crit dmg — core build crit" },
+  "Blade of the Heptaseas": { c:"atk", e:"+70 PA +250 HP +15 pen; bonus dmg dari semak/idle 5s — burst pembuka" },
+  "Corrosion Scythe":       { c:"atk", e:"On-hit slow stack + attack speed — nempel target" },
+  "Demon Hunter Sword":     { c:"atk", e:"Basic attack +8% current HP target — pelebur tank" },
+  "Endless Battle":         { c:"atk", e:"True dmg 60% PA tiap habis skill — hero combo skill+basic" },
+  "Golden Staff":           { c:"atk", e:"Crit→AS + efek basic attack lebih sering — on-hit MM" },
+  "Great Dragon Spear":     { c:"atk", e:"+70 PA +20% crit +CDR; MS burst habis ulti — crit + mobilitas" },
+  "Haas's Claws":           { c:"atk", e:"+20% crit +20% lifesteal; crit kasih AS — sustain crit" },
+  "Hunter Strike":          { c:"atk", e:"+80 PA +15 pen +CDR; hit beruntun → MS burst — assassin/fighter skill" },
+  "Malefic Gun":            { c:"atk", e:"+30% phys pen + attack range +12% — pen buat MM attack speed" },
+  "Malefic Roar":           { c:"atk", e:"Phys pen % + bonus pen makin tebal armor lawan — WAJIB vs tanky" },
+  "Rose Gold Meteor":       { c:"atk", e:"Shield otomatis saat HP 30% + lifesteal — nahan burst buat carry fisik" },
+  "Sea Halberd":            { c:"atk", e:"Anti-heal 60% on-hit + bonus dmg vs HP gede — jawaban healer/lifesteal" },
+  "War Axe":                { c:"atk", e:"Stack PA saat combat + hybrid lifesteal — core fighter" },
+  "Wind of Nature":         { c:"atk", e:"Aktif: KEBAL damage fisik 2s — jawaban MM vs assassin fisik" },
+  "Windtalker":             { c:"atk", e:"+35% AS +20% crit; AoE magic tiap beberapa hit — waveclear MM" },
+  "Sky Piercer":            { c:"atk", e:"Eksekusi musuh <4% HP (naik per stack kill) — snowball finisher" },
+  // ---- MAGIC ----
+  "Blood Wings":            { c:"mag", e:"+90 MP — magic power terbesar, scaling late" },
+  "Clock of Destiny":       { c:"mag", e:"+HP/mana/MP; stack def saat deal dmg — mage tanky/scaling" },
+  "Concentrated Energy":    { c:"mag", e:"+400 HP + amp damage stack — mage DPS sustain" },
+  "Divine Glaive":          { c:"mag", e:"Magic pen % + bonus makin tebal magic def lawan — WAJIB vs tanky" },
+  "Enchanted Talisman":     { c:"mag", e:"+20% CDR + regen mana 15%/10s — mage spam skill" },
+  "Feather of Heaven":      { c:"mag", e:"Basic attack magic + AS — MM/hybrid magic" },
+  "Flask of the Oasis":     { c:"mag", e:"Heal/shield lu lebih kuat + shield proc — support healer" },
+  "Genius Wand":            { c:"mag", e:"Shred magic def tiap damage — poke efektif dari early" },
+  "Glowing Wand":           { c:"mag", e:"Burn %HP + Lifebane: anti-heal versi mage — vs healer & tank" },
+  "Holy Crystal":           { c:"mag", e:"Amplify Magic Power 21-35% — pure damage late" },
+  "Ice Queen Wand":         { c:"mag", e:"Skill hit → slow stack + magic lifesteal — kiting & nempel" },
+  "Lightning Truncheon":    { c:"mag", e:"Tiap 6s skill berikutnya nyambar 3 musuh — burst poke" },
+  "Starlium Scythe":        { c:"mag", e:"Habis skill: basic attack true dmg ~100% MP — nembus magic def" },
+  "Wishing Lantern":        { c:"mag", e:"Proc damage %HP current target — vs lawan HP gede" },
+  "Winter Crown":           { c:"mag", e:"Aktif: beku 2s KEBAL semua (skill tetap jalan) — escape burst/lockdown", adaptive:true },
+  "Fleeting Time":          { c:"mag", e:"Kill/assist → refund 30% CD ulti — hero bergantung ulti", adaptive:true },
+  // ---- DEFENSE ----
+  "Antique Cuirass":        { c:"def", e:"Kena skill fisik → attack musuh -6% (stack 3x) — vs burst fisik skill" },
+  "Athena's Shield":        { c:"def", e:"Kena magic dmg → -25% magic dmg 3s — vs BURST magic" },
+  "Blade Armor":            { c:"def", e:"+80 Phys Def; reflect basic attack + slow — vs MM crit/basic attack" },
+  "Brute Force Breastplate":{ c:"def", e:"+HP +def + MS stack saat combat — bruiser agresif" },
+  "Chastise Pauldron":      { c:"def", e:"Attack speed penyerang dipotong ke 75% + self-heal <30% HP — vs DPS attack speed" },
+  "Cursed Helmet":          { c:"def", e:"Burn AoE %HP — waveclear & duel tanky" },
+  "Dominance Ice":          { c:"def", e:"Aura: AS musuh -20% + heal/shield musuh -50% — anti-heal versi tank" },
+  "Guardian Helmet":        { c:"def", e:"+1800 HP + regen besar di luar combat — frontliner HP pool" },
+  "Immortality":            { c:"def", e:"Hidup lagi 2.5s setelah mati — second chance late game" },
+  "Oracle":                 { c:"def", e:"Hybrid def + shield & regen yang lu terima +30% — combo sama healer/shield" },
+  "Queen's Wings":          { c:"def", e:"HP <40%: -30% damage diterima + CD skill turun — bruiser anti-burst" },
+  "Radiant Armor":          { c:"def", e:"Kena magic berulang → magic def stack — vs POKE/DPS magic" },
+  "Thunder Belt":           { c:"def", e:"True dmg + slow tiap 4s (scaling def) — tank utility/peel" }
+};
+// ==== DATABASE HERO (bagian A: Aamon - Lylia) ====
+// n:nama r:role l:lane d:damage(p/m/x) bt:build type
+// tg: tag ancaman SAAT JADI LAWAN (0-3): tk=tanky bu=burst dp=dps-basic/sustained cc=crowd control
+//     hl=heal/shield tim ss=sustain diri dv=dive/mobilitas pk=poke iv=invis td=true damage
+// em/tl/sp/bo/co: rekomendasi default saat lu yang pakai. rb: roam blessing default.
+
+const HEROES_A = [
+{n:"Aamon",r:"Assassin",l:["Jungle","Mid"],d:"m",bt:"as_m",tg:{bu:3,dv:2,ss:1,iv:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Habis skill lu camo — pakai buat reposisi, jangan cuma kabur."},
+{n:"Akai",r:"Tank",l:["Roam","Jungle"],d:"p",bt:"tk",tg:{tk:3,cc:2,dv:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Petrify"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Dominance Ice"],note:"Ulti dorong carry lawan ke tim lu, bukan sebaliknya."},
+{n:"Aldous",r:"Fighter",l:["EXP"],d:"p",bt:"fg_dmg",tg:{bu:2,dv:2,tk:1,ss:1},em:"Fighter",tl:["Thrill","Festival of Blood","War Cry"],sp:["Sprint","Flicker"],bo:"Warrior Boots",co:["Sky Piercer","Endless Battle"],note:"Prioritas farm stack S1 — jangan kepancing war sebelum 400 stack."},
+{n:"Alice",r:"Mage",l:["EXP","Mid"],d:"m",bt:"mg_dps",tg:{tk:2,ss:3,cc:1,dp:2},em:"Mage",tl:["Vitality","Festival of Blood","Impure Rage"],sp:["Flicker","Vengeance"],bo:"Demon Shoes",co:["Concentrated Energy","Ice Queen Wand"],note:"Masuk pas skill musuh habis — lifesteal lu menang lawan DPS, kalah lawan burst."},
+{n:"Alpha",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{dp:2,ss:2,tk:1,cc:1},em:"Fighter",tl:["Firmness","Festival of Blood","Brave Smite"],sp:["Flicker","Vengeance"],bo:"Warrior Boots",co:["War Axe","Demon Hunter Sword"],note:"S2 beta = poke gratis; simpan S1 kedua buat kabur."},
+{n:"Alucard",r:"Fighter",l:["Jungle","EXP"],d:"p",bt:"fg_dmg",tg:{bu:2,ss:3,dv:2},em:"Fighter",tl:["Thrill","Festival of Blood","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Haas's Claws","Endless Battle"],note:"Lifesteal lu sia-sia lawan burst — pilih fight yang panjang."},
+{n:"Angela",r:"Support",l:["Roam"],d:"m",bt:"sp_heal",tg:{hl:3,cc:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Demon Shoes",rb:"Favor",co:["Flask of the Oasis","Ice Queen Wand"],note:"Ulti masuk ke hero yang MAU dive, bukan yang lagi sekarat doang."},
+{n:"Argus",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_dmg",tg:{dp:3,dv:1,ss:1},em:"Fighter",tl:["Swift","Weapon Master","War Cry"],sp:["Flicker","Sprint"],bo:"Swift Boots",co:["Demon Hunter Sword","Golden Staff"],note:"Ulti = 4 detik kebal mati. Pancing semua skill musuh dulu, baru nyala."},
+{n:"Arlott",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_dmg",tg:{bu:2,cc:2,dv:2},em:"Fighter",tl:["Firmness","Festival of Blood","Killing Spree"],sp:["Flicker","Petrify"],bo:"Warrior Boots",co:["Hunter Strike","Brute Force Breastplate"],note:"S1 ke target ke-mark = dash gratis — hitung mark sebelum all-in."},
+{n:"Atlas",r:"Tank",l:["Roam"],d:"m",bt:"tk",tg:{tk:3,cc:3},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Dominance Ice","Immortality"],note:"Ulti+Flicker = wombo 5 orang. Latih timing tariknya."},
+{n:"Aulus",r:"Fighter",l:["Jungle"],d:"p",bt:"fg_dmg",tg:{dp:3,tk:1,ss:1},em:"Fighter",tl:["Thrill","Wilderness Blessing","War Cry"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Full stack passive dulu baru berani duel."},
+{n:"Aurora",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_burst",tg:{bu:3,cc:3,pk:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",co:["Lightning Truncheon","Holy Crystal"],note:"Simpan pasif freeze buat hero dive, bukan buat minion."},
+{n:"Badang",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_dmg",tg:{bu:2,cc:2,dp:1},em:"Fighter",tl:["Thrill","Festival of Blood","War Cry"],sp:["Flicker","Petrify"],bo:"Warrior Boots",co:["Golden Staff","Endless Battle"],note:"Semua combo butuh tembok — tarung di pinggir lane/jungle."},
+{n:"Balmond",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{tk:2,dp:2,ss:2,td:1},em:"Fighter",tl:["Vitality","Festival of Blood","Brave Smite"],sp:["Flicker","Vengeance"],bo:"Warrior Boots",co:["War Axe","Cursed Helmet"],note:"Ulti = true damage %HP — eksekusi target yang lari, bukan pembuka."},
+{n:"Bane",r:"Fighter",l:["EXP","Gold"],d:"x",bt:"fg_dmg",tg:{pk:2,bu:2,dp:1},em:"Fighter",tl:["Thrill","Festival of Blood","War Cry"],sp:["Flicker","Sprint"],bo:"Warrior Boots",co:["Endless Battle","Blade of Despair"],note:"Bisa juga full magic build (shark spam) — fisik lebih konsisten."},
+{n:"Barats",r:"Tank",l:["EXP","Jungle"],d:"p",bt:"tk",tg:{tk:3,cc:2,dp:2},em:"Tank",tl:["Firmness","Tenacity","Brave Smite"],sp:["Petrify","Flicker"],bo:"Tough Boots",co:["Cursed Helmet","Antique Cuirass"],note:"Stack dulu sampai gede baru frontline; ulti telan hero kunci."},
+{n:"Baxia",r:"Tank",l:["Roam","Jungle"],d:"m",bt:"tk",tg:{tk:3,cc:1,dv:1},em:"Tank",tl:["Agility","Tenacity","Concussive Blast"],sp:["Flicker","Retribution"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Guardian Helmet"],note:"Passive lu udah motong heal/regen musuh — lu counter alami tim healer."},
+{n:"Beatrix",r:"Marksman",l:["Gold","Mid"],d:"p",bt:"mm_skill",tg:{pk:2,bu:2,dp:2},em:"Marksman",tl:["Thrill","Weapon Master","Weakness Finder"],sp:["Flicker","Sprint"],bo:"Tough Boots",co:["Blade of Despair","Blade of the Heptaseas"],note:"Ganti senjata sesuai fase: Renner poke, Nibiru war jarak dekat."},
+{n:"Belerick",r:"Tank",l:["Roam","EXP"],d:"m",bt:"tk",tg:{tk:3,cc:2,ss:2},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Guardian Helmet","Cursed Helmet"],note:"Taunt pasif — berdiri di depan MM lu, biarin dia mukul lu."},
+{n:"Benedetta",r:"Assassin",l:["EXP","Roam"],d:"p",bt:"as_p",tg:{bu:2,dv:3,ss:1,cc:1},em:"Assassin",tl:["Rupture","Festival of Blood","Killing Spree"],sp:["Petrify","Flicker"],bo:"Warrior Boots",co:["War Axe","Hunter Strike"],note:"Sword Intent = imun pas dash — save buat dodge skill kunci."},
+{n:"Brody",r:"Marksman",l:["Gold"],d:"p",bt:"mm_skill",tg:{bu:2,dp:2},em:"Marksman",tl:["Thrill","Weapon Master","Weakness Finder"],sp:["Flicker","Aegis"],bo:"Tough Boots",co:["Blade of Despair","Sky Piercer"],note:"Spike level 4 + BoD cepat — agresif early, jangan pasif."},
+{n:"Bruno",r:"Marksman",l:["Gold"],d:"p",bt:"mm_crit",tg:{dp:3,pk:1},em:"Marksman",tl:["Fatal","Weapon Master","Weakness Finder"],sp:["Flicker","Aegis"],bo:"Swift Boots",co:["Berserker's Fury","Windtalker"],note:"Tendang bola tiap CD — passive nambah crit tim? fokus positioning."},
+{n:"Carmilla",r:"Support",l:["Roam"],d:"m",bt:"sp_util",tg:{cc:2,tk:1,ss:1,hl:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Conceal",co:["Dominance Ice","Cursed Helmet"],note:"Ulti link = damage kebagi — masuk pas musuh grup."},
+{n:"Cecilion",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{pk:3,bu:2,cc:1},em:"Mage",tl:["Inspire","Weapon Master","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Demon Shoes",co:["Lightning Truncheon","Holy Crystal"],note:"Spam S1 buat stack dari menit 1 — late game lu monster."},
+{n:"Chang'e",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{pk:3,dp:2},em:"Mage",tl:["Rupture","Weapon Master","Impure Rage"],sp:["Flicker","Purify"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Ulti dari jarak maksimal sambil mundur — jangan maju pas ulti."},
+{n:"Chip",r:"Support",l:["Roam"],d:"m",bt:"sp_util",tg:{tk:2,cc:1,hl:1},em:"Tank",tl:["Vitality","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Conceal",co:["Oracle","Dominance Ice"],note:"Portal = rotasi tim — pasang buat bantu lane yang ketinggalan."},
+{n:"Chou",r:"Fighter",l:["Roam","EXP"],d:"p",bt:"fg_dmg",tg:{cc:2,dv:2,bu:2},em:"Assassin",tl:["Agility","Master Assassin","Killing Spree"],sp:["Flicker","Petrify"],bo:"Warrior Boots",rb:"Conceal",co:["Hunter Strike","Blade of Despair"],note:"Kick carry lawan keluar dari tim, S2 imun buat masuk/keluar."},
+{n:"Cici",r:"Fighter",l:["EXP"],d:"p",bt:"fg_sus",tg:{dp:2,ss:2,pk:2,dv:1},em:"Fighter",tl:["Vitality","Festival of Blood","War Cry"],sp:["Flicker","Sprint"],bo:"Warrior Boots",co:["War Axe","Golden Staff"],note:"Yoyo dari jarak aman terus; jangan tukar pukulan diam-diam."},
+{n:"Claude",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3,dv:2},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Sprint"],bo:"Swift Boots",co:["Golden Staff","Demon Hunter Sword"],note:"Ulti di tengah crowd + item aktif (Wind of Nature) = channel aman."},
+{n:"Clint",r:"Marksman",l:["Gold"],d:"p",bt:"mm_crit",tg:{bu:2,dp:2,pk:2},em:"Marksman",tl:["Thrill","Weapon Master","Weakness Finder"],sp:["Flicker","Sprint"],bo:"Swift Boots",co:["Berserker's Fury","Great Dragon Spear"],note:"Pola: skill → basic enhanced → repeat. Poke pakai S1 lewat minion."},
+{n:"Cyclops",r:"Mage",l:["Mid","Jungle"],d:"m",bt:"mg_dps",tg:{bu:2,dp:2,cc:1},em:"Mage",tl:["Rupture","Bargain Hunter","Impure Rage"],sp:["Flicker","Retribution"],bo:"Arcane Boots",co:["Lightning Truncheon","Genius Wand"],note:"Ulti = lock target buat pickoff hero licin."},
+{n:"Diggie",r:"Support",l:["Roam"],d:"m",bt:"sp_util",tg:{cc:1,hl:1,pk:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Sprint"],bo:"Demon Shoes",rb:"Encourage",co:["Oracle","Dominance Ice"],note:"Ulti = tim kebal CC. COUNTER tim wombo (Atlas/Tigreal). Mati pun masih guna."},
+{n:"Dyrroth",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_dmg",tg:{bu:3,dp:1,ss:1},em:"Assassin",tl:["Rupture","Festival of Blood","Killing Spree"],sp:["Flicker","Execute"],bo:"Warrior Boots",co:["Hunter Strike","Blade of Despair"],note:"S2 shred armor — lu salah satu fighter yang boleh target tank."},
+{n:"Edith",r:"Tank",l:["EXP","Roam"],d:"m",bt:"tk",tg:{tk:2,cc:2,dp:2},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Guardian Helmet"],note:"Tank dulu, kumpulin Wrath, baru form MM — damage lu magic."},
+{n:"Esmeralda",r:"Fighter",l:["EXP","Roam"],d:"m",bt:"fg_mag",tg:{tk:2,ss:3,dp:2,dv:1},em:"Mage",tl:["Vitality","Festival of Blood","Impure Rage"],sp:["Flicker","Sprint"],bo:"Tough Boots",co:["Clock of Destiny","Oracle"],note:"Shield musuh = makanan lu. Lawan Aegis/Angela? makin kenyang."},
+{n:"Estes",r:"Support",l:["Roam"],d:"m",bt:"sp_heal",tg:{hl:3},em:"Support",tl:["Vitality","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Demon Shoes",rb:"Favor",co:["Flask of the Oasis","Enchanted Talisman"],note:"Link jangan putus; posisi selalu di belakang frontline."},
+{n:"Eudora",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:3,cc:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Combo dari fog: S2 stun dulu, baru dump semua."},
+{n:"Fanny",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:3},em:"Assassin",tl:["Rupture","Festival of Blood","Killing Spree"],sp:["Retribution","Flicker"],bo:"Tough Boots",co:["Hunter Strike","Blade of Despair"],note:"Musuh pasti siapin CC buat lu — cek dulu siapa yang pegang stun."},
+{n:"Faramis",r:"Support",l:["Roam","Mid"],d:"m",bt:"sp_util",tg:{hl:2,pk:1,cc:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Sprint"],bo:"Magic Shoes",rb:"Favor",co:["Fleeting Time","Enchanted Talisman"],note:"Ulti SEBELUM war mulai — tim lu jadi ga takut mati."},
+{n:"Floryn",r:"Support",l:["Roam"],d:"m",bt:"sp_heal",tg:{hl:3},em:"Support",tl:["Vitality","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Demon Shoes",rb:"Favor",co:["Flask of the Oasis","Enchanted Talisman"],note:"Item ke-6 lu gratis buat ally — kasih ke carry."},
+{n:"Franco",r:"Tank",l:["Roam"],d:"p",bt:"tk",tg:{tk:2,cc:3},em:"Tank",tl:["Agility","Tenacity","Concussive Blast"],sp:["Flicker","Sprint"],bo:"Tough Boots",rb:"Conceal",co:["Thunder Belt","Immortality"],note:"Hook dari fog → ulti suppress → tim eksekusi. Miss hook? mundur."},
+{n:"Fredrinn",r:"Tank",l:["Jungle","EXP"],d:"p",bt:"tk",tg:{tk:3,dp:2,cc:2},em:"Fighter",tl:["Firmness","Festival of Blood","War Cry"],sp:["Retribution","Petrify"],bo:"Warrior Boots",co:["War Axe","Antique Cuirass"],note:"Simpan crystal energy buat burst S3+ulti pas musuh grup."},
+{n:"Freya",r:"Fighter",l:["Jungle","EXP"],d:"p",bt:"fg_dmg",tg:{dp:2,bu:2,dv:1,tk:1},em:"Fighter",tl:["Swift","Festival of Blood","War Cry"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Stack S2 penuh sebelum lompat masuk — shield + AoE."},
+{n:"Gatotkaca",r:"Tank",l:["Roam","EXP"],d:"m",bt:"tk",tg:{tk:3,cc:2,dv:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Guardian Helmet"],note:"Def naik dari HP hilang — makin sekarat makin keras. Ulti flank dari fog."},
+{n:"Gloo",r:"Tank",l:["EXP","Roam"],d:"m",bt:"tk",tg:{tk:3,cc:2,ss:2},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Sprint"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Guardian Helmet"],note:"Ulti nempel di carry musuh — damage yang lu terima balik ke dia."},
+{n:"Gord",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{pk:3,dp:2,cc:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Glowing Wand","Holy Crystal"],note:"Poke dari luar jangkauan; ulti sambil jalan mundur."},
+{n:"Granger",r:"Marksman",l:["Jungle","Gold"],d:"p",bt:"mm_skill",tg:{bu:2,dp:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Great Dragon Spear","Blade of Despair"],note:"Peluru ke-6 crit — mulai duel dengan peluru penuh."},
+{n:"Grock",r:"Tank",l:["Roam","EXP"],d:"p",bt:"tk",tg:{tk:3,bu:1,cc:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Petrify"],bo:"Warrior Boots",rb:"Encourage",co:["Dominance Ice","Antique Cuirass"],note:"Nempel tembok = def & regen naik. Ulti bikin tembok buat misahin musuh."},
+{n:"Guinevere",r:"Fighter",l:["EXP","Roam"],d:"m",bt:"fg_mag",tg:{bu:3,cc:3,dv:2,ss:1},em:"Mage",tl:["Vitality","Festival of Blood","Lethal Ignition"],sp:["Flicker","Petrify"],bo:"Tough Boots",co:["Concentrated Energy","Holy Crystal"],note:"S2 blink → ulti airborne — combo lock 5 orang kalau posisinya pas."},
+{n:"Gusion",r:"Assassin",l:["Jungle","Mid"],d:"m",bt:"as_m",tg:{bu:3,dv:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Magic Shoes",co:["Holy Crystal","Genius Wand"],note:"Combo dagger penuh → recall dagger → repeat. Butuh CDR."},
+{n:"Hanabi",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3,cc:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Purify","Flicker"],bo:"Swift Boots",co:["Windtalker","Haas's Claws"],note:"Passive full = kebal CC. Zero escape — posisi adalah segalanya."},
+{n:"Hanzo",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:2,dp:2,iv:1},em:"Assassin",tl:["Rupture","Seasoned Hunter","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Blade of the Heptaseas","Blade of Despair"],note:"Badan asli sembunyi JAUH dan di tempat ga ketebak."},
+{n:"Harith",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{dp:3,dv:2,ss:1},em:"Mage",tl:["Rupture","Weapon Master","Impure Rage"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Starlium Scythe","Holy Crystal"],note:"Shield tiap dash — dance in & out, jangan diem."},
+{n:"Harley",r:"Assassin",l:["Jungle","Mid"],d:"m",bt:"as_m",tg:{bu:2,pk:1,dv:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Ulti + spam kartu → damage ulti meledak. S2 = tiket pulang."},
+{n:"Hayabusa",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:3},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Execute"],bo:"Warrior Boots",co:["Hunter Strike","Blade of the Heptaseas"],note:"Ulti pas target sendirian — di crowd damage kebagi."},
+{n:"Helcurt",r:"Assassin",l:["Jungle","EXP"],d:"p",bt:"as_p",tg:{bu:3,iv:2,dv:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Blade of Despair","Endless Battle"],note:"Ulti = map gelap — kode tim buat serentak masuk."},
+{n:"Hilda",r:"Fighter",l:["Roam","EXP"],d:"p",bt:"fg_sus",tg:{tk:2,bu:2,ss:2},em:"Fighter",tl:["Vitality","Tenacity","Killing Spree"],sp:["Flicker","Sprint"],bo:"Warrior Boots",rb:"Dire Hit",co:["Cursed Helmet","Queen's Wings"],note:"Bush = regen + MS. S3 full stack buat eksekusi."},
+{n:"Hirara",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:3},em:"Assassin",tl:["Rupture","Seasoned Hunter","Killing Spree"],sp:["Retribution","Flicker"],bo:"Tough Boots",co:["Hunter Strike","Blade of Despair"],note:"Drag skill ke skill lain = combo unik. Spike di 2 item — lemah vs tank, target backline."},
+{n:"Hylos",r:"Tank",l:["Roam","Jungle"],d:"m",bt:"tk",tg:{tk:3,cc:1,ss:2,dp:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Sprint"],bo:"Tough Boots",rb:"Encourage",co:["Guardian Helmet","Oracle"],note:"Ring nyala terus nempel carry musuh — lu aura damage berjalan."},
+{n:"Irithel",r:"Marksman",l:["Gold"],d:"p",bt:"mm_crit",tg:{dp:3},em:"Marksman",tl:["Fatal","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Berserker's Fury","Windtalker"],note:"Satu-satunya MM yang nembak sambil jalan — kite terus."},
+{n:"Ixia",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3,pk:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Purify","Aegis"],bo:"Swift Boots",co:["Haas's Claws","Demon Hunter Sword"],note:"Zero escape total — mainkan range S1 dan stay di belakang."},
+{n:"Jawhead",r:"Fighter",l:["Roam","EXP"],d:"p",bt:"fg_dmg",tg:{cc:2,bu:2,tk:1},em:"Fighter",tl:["Firmness","Tenacity","Concussive Blast"],sp:["Flicker","Petrify"],bo:"Warrior Boots",rb:"Conceal",co:["Thunder Belt","Dominance Ice"],note:"Lempar carry musuh KE tim lu. Jangan lempar tank ke MM sendiri."},
+{n:"Johnson",r:"Tank",l:["Roam"],d:"m",bt:"tk",tg:{tk:3,cc:3,pk:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Petrify","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Cursed Helmet","Athena's Shield"],note:"Mobil bawa 1 temen — gank lane yang lagi maju."},
+{n:"Joy",r:"Assassin",l:["Jungle","EXP"],d:"m",bt:"as_m",tg:{bu:2,dv:3,cc:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Arcane Boots",co:["Starlium Scythe","Holy Crystal"],note:"Dash on-beat = imun. Latih ritme — itu 80% hero ini."},
+{n:"Julian",r:"Fighter",l:["EXP","Jungle"],d:"m",bt:"fg_mag",tg:{bu:2,dp:2,cc:2,ss:1},em:"Fighter",tl:["Vitality","Festival of Blood","Lethal Ignition"],sp:["Flicker","Retribution"],bo:"Tough Boots",co:["Concentrated Energy","Glowing Wand"],note:"Skill ke-3 selalu enhanced — rencanakan urutan combo."},
+{n:"Kadita",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_burst",tg:{bu:3,cc:2,dv:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Petrify"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"S1 kedua = imun — timing buat dodge skill kunci musuh."},
+{n:"Kagura",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:3,cc:2,pk:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Purify"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Payung = nyawa. Combo penuh (S2-ulti-S1) one-shot mage musuh."},
+{n:"Kaja",r:"Support",l:["Roam"],d:"m",bt:"sp_util",tg:{cc:3,bu:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Sprint"],bo:"Magic Shoes",rb:"Conceal",co:["Dominance Ice","Fleeting Time"],note:"Flicker+Ulti = culik carry musuh ke tim lu. Itu win condition lu."},
+{n:"Kalea",r:"Support",l:["Roam"],d:"p",bt:"sp_heal",tg:{hl:2,cc:2,tk:1},em:"Support",tl:["Vitality","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Favor",co:["Oracle","Flask of the Oasis"],note:"Heal + engage hybrid — masuk bareng frontline, jangan jadi Estes."},
+{n:"Karina",r:"Assassin",l:["Jungle"],d:"m",bt:"as_m",tg:{bu:3,dv:2,td:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Ulti reset tiap kill — urutan target: yang paling gampang mati dulu."},
+{n:"Karrie",r:"Marksman",l:["Gold","Jungle"],d:"p",bt:"mm_as",tg:{dp:3,td:3},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Inspire"],bo:"Swift Boots",co:["Demon Hunter Sword","Golden Staff"],note:"Lightwheel = TRUE damage — lu counter alami tim tanky."},
+{n:"Khaleed",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_sus",tg:{dp:2,ss:2,cc:1},em:"Fighter",tl:["Thrill","Festival of Blood","Brave Smite"],sp:["Flicker","Petrify"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Quicksand = regen gratis; ulti buat masuk atau kabur."},
+{n:"Khufra",r:"Tank",l:["Roam"],d:"p",bt:"tk",tg:{tk:3,cc:3},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Petrify"],bo:"Tough Boots",rb:"Conceal",co:["Cursed Helmet","Dominance Ice"],note:"Bola S2 = STOP semua dash — lu jawaban buat Fanny/Ling/Lance."},
+{n:"Kimmy",r:"Marksman",l:["Gold","EXP"],d:"x",bt:"mm_mag",tg:{dp:3,pk:2},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Feather of Heaven","Genius Wand"],note:"Damage basic attack lu MAGIC — musuh sering salah beli armor."},
+{n:"Lancelot",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:3},em:"Assassin",tl:["Rupture","Festival of Blood","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Hunter Strike","Blade of Despair"],note:"S2 = imun. Jangan buang buat damage doang — itu tombol hidup lu."},
+{n:"Lapu-Lapu",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_dmg",tg:{bu:2,dp:2,tk:1},em:"Fighter",tl:["Thrill","Festival of Blood","War Cry"],sp:["Flicker","Petrify"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Heavy mode = burst + damage reduction. Masuk pas ulti ready."},
+{n:"Layla",r:"Marksman",l:["Gold"],d:"p",bt:"mm_crit",tg:{dp:3,pk:2},em:"Marksman",tl:["Fatal","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Berserker's Fury","Malefic Gun"],note:"Range paling jauh se-game pas late — pukul dari luar jangkauan semua orang."},
+{n:"Leomord",r:"Fighter",l:["Jungle","EXP"],d:"p",bt:"fg_dmg",tg:{dp:2,bu:2,dv:1},em:"Fighter",tl:["Thrill","Festival of Blood","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Blade of Despair","Berserker's Fury"],note:"Naik kuda = skill set baru + engage; turun kuda pas kuda mau abis buat burst."},
+{n:"Lesley",r:"Marksman",l:["Gold"],d:"p",bt:"mm_crit",tg:{bu:2,dp:2,pk:2,iv:1},em:"Marksman",tl:["Fatal","Master Assassin","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Berserker's Fury","Blade of Despair"],note:"Passive crit tiap ga kena hit — poke sabar, jangan tukar damage."},
+{n:"Ling",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:3},em:"Assassin",tl:["Fatal","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Tough Boots",co:["Berserker's Fury","Blade of Despair"],note:"Di tembok = aman & regen energy. Turun CUMA buat kill yang pasti."},
+{n:"Lolita",r:"Tank",l:["Roam"],d:"p",bt:"tk",tg:{tk:2,cc:2,hl:1},em:"Tank",tl:["Vitality","Tenacity","Focusing Mark"],sp:["Flicker","Petrify"],bo:"Tough Boots",rb:"Encourage",co:["Dominance Ice","Athena's Shield"],note:"S2 BLOCK semua projectile — berdiri depan MM lu pas poke war."},
+{n:"Lukas",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{dp:2,bu:2,ss:2,dv:2,cc:1},em:"Fighter",tl:["Firmness","Festival of Blood","Brave Smite"],sp:["Flicker","Vengeance"],bo:"Tough Boots",co:["War Axe","Hunter Strike"],note:"Stack Vigor dulu — ulti transform pas 2 stack = kebal CC + all stats naik."},
+{n:"Lunox",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:3,pk:1,ss:1},em:"Mage",tl:["Rupture","Weapon Master","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Divine Glaive","Holy Crystal"],note:"Dark ulti = pen gede (tank pun sakit); Light ulti = imun buat escape."},
+{n:"Luo Yi",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_burst",tg:{bu:2,cc:2,pk:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",co:["Lightning Truncheon","Holy Crystal"],note:"Yin-yang reaction = stun area. Ulti teleport tim buat flank/split."},
+{n:"Lylia",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{pk:3,bu:2,dp:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Sprint","Flicker"],bo:"Arcane Boots",co:["Glowing Wand","Holy Crystal"],note:"Ulti balikin posisi + HP 4 detik lalu — maju agresif, tanam shadow, bait skill musuh, ulti balik."}
+];
+// ==== DATABASE HERO (bagian B: Marcel - Zilong) ====
+
+const HEROES_B = [
+{n:"Marcel",r:"Support",l:["Roam"],d:"x",bt:"sp_util",tg:{cc:3,tk:2,hl:2,td:2},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Vengeance","Flicker"],bo:"Magic Shoes",rb:"Conceal",co:["Thunder Belt","Dominance Ice"],note:"Ulti Golden Hour freeze SEMUA (termasuk tim lu) — timing buat motong engage musuh atau setup wombo."},
+{n:"Martis",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_dmg",tg:{dp:2,bu:2,cc:2,td:1},em:"Fighter",tl:["Thrill","Festival of Blood","Killing Spree"],sp:["Flicker","Retribution"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Ulti = true damage + reset kalau kill — eksekusi berantai."},
+{n:"Masha",r:"Fighter",l:["EXP","Gold"],d:"p",bt:"fg_sus",tg:{dp:2,ss:2,tk:1},em:"Fighter",tl:["Swift","Festival of Blood","War Cry"],sp:["Sprint","Flicker"],bo:"Warrior Boots",co:["Demon Hunter Sword","Golden Staff"],note:"3 bar HP; S2 potong HP lawan %-an. Split push sambil nunggu bar regen."},
+{n:"Mathilda",r:"Support",l:["Roam"],d:"m",bt:"sp_util",tg:{dv:2,hl:1,cc:1,bu:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Vengeance"],bo:"Rapid Boots",rb:"Conceal",co:["Fleeting Time","Dominance Ice"],note:"S2 = taxi: bawa assassin lu masuk, atau jemput carry yang kejebak."},
+{n:"Melissa",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Windtalker","Demon Hunter Sword"],note:"S2 field = anti-dive: assassin yang masuk kena link doll. Berdiri di dalamnya pas war."},
+{n:"Minotaur",r:"Tank",l:["Roam"],d:"p",bt:"tk",tg:{tk:3,cc:2,hl:2},em:"Tank",tl:["Vitality","Tenacity","Focusing Mark"],sp:["Flicker","Revitalize"],bo:"Tough Boots",rb:"Favor",co:["Oracle","Guardian Helmet"],note:"Rage penuh → ulti = AoE CC + heal tim. Isi rage sebelum war."},
+{n:"Minsitthar",r:"Fighter",l:["Roam","EXP"],d:"p",bt:"tk",tg:{cc:2,tk:2,dp:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Petrify"],bo:"Warrior Boots",rb:"Encourage",co:["Thunder Belt","Dominance Ice"],note:"Ulti = zona ANTI-DASH — Fanny/Ling/Lance mati gaya di dalamnya."},
+{n:"Miya",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3,iv:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Windtalker","Berserker's Fury"],note:"Ulti = hilang + hapus CC — pakai buat dodge skill kunci, bukan panik button."},
+{n:"Moskov",r:"Marksman",l:["Gold","Jungle"],d:"p",bt:"mm_as",tg:{dp:3,cc:1,pk:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Demon Hunter Sword","Corrosion Scythe"],note:"Spear dorong musuh ke tembok = stun. Basic attack nembus target."},
+{n:"Nana",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_burst",tg:{cc:2,pk:2,bu:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",rb:"Dire Hit",co:["Glowing Wand","Holy Crystal"],note:"Molina di jalur masuk assassin — anti-dive otomatis. Passive = cheat death."},
+{n:"Natalia",r:"Assassin",l:["Roam","Jungle"],d:"p",bt:"as_p",tg:{bu:2,dv:2,iv:3},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Flicker","Sprint"],bo:"Warrior Boots",rb:"Conceal",co:["Blade of the Heptaseas","Blade of Despair"],note:"Silence dari belakang ke mage/MM — kunci mereka sebelum war mulai."},
+{n:"Natan",r:"Marksman",l:["Gold","Mid"],d:"m",bt:"mm_mag",tg:{dp:3,bu:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Feather of Heaven","Holy Crystal"],note:"Basic attack lu MAGIC — armor musuh ga ngaruh. Clone ulti = damage dobel."},
+{n:"Nolan",r:"Assassin",l:["Jungle"],d:"p",bt:"as_p",tg:{bu:3,dv:2},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Hunter Strike","Blade of Despair"],note:"Rift ketutup = burst + tarik — combo S1-S2 cepat sebelum musuh sadar."},
+{n:"Novaria",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_poke",tg:{pk:3,bu:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Lightning Truncheon","Divine Glaive"],note:"Snipe dari fog — S2 kasih vision, bola makin jauh makin sakit."},
+{n:"Obsidia",r:"Marksman",l:["Gold"],d:"p",bt:"mm_as",tg:{dp:3,cc:2},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Corrosion Scythe","Demon Hunter Sword"],note:"Ulti tether = target ga bisa dash/blink — kunci hero licin musuh."},
+{n:"Odette",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:3,cc:1,pk:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Purify"],bo:"Arcane Boots",co:["Lightning Truncheon","Holy Crystal"],note:"Ulti butuh setup — masuk SETELAH CC tim, jangan jadi pembuka."},
+{n:"Paquito",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_dmg",tg:{bu:3,dv:2,cc:1},em:"Assassin",tl:["Rupture","Festival of Blood","Killing Spree"],sp:["Flicker","Petrify"],bo:"Warrior Boots",co:["War Axe","Hunter Strike"],note:"Stack passive penuh → combo enhanced. Jangan spam skill tanpa stack."},
+{n:"Pharsa",r:"Mage",l:["Mid"],d:"m",bt:"mg_poke",tg:{pk:3,bu:2,cc:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Ulti dari posisi yang ga keliatan; bentuk burung buat reposisi."},
+{n:"Phoveus",r:"Fighter",l:["EXP","Mid"],d:"m",bt:"fg_mag",tg:{bu:2,tk:1,ss:2,cc:1},em:"Fighter",tl:["Vitality","Festival of Blood","Brave Smite"],sp:["Petrify","Flicker"],bo:"Tough Boots",co:["Concentrated Energy","Oracle"],note:"COUNTER hero dash (Wanwan/Ling/Fanny) — ulti gratis tiap mereka gerak."},
+{n:"Popol and Kupa",r:"Marksman",l:["Gold","Roam"],d:"p",bt:"mm_as",tg:{dp:2,cc:2,pk:1},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Sprint"],bo:"Swift Boots",co:["Corrosion Scythe","Golden Staff"],note:"Trap di semak sekitar objective; Kupa alpha mode pas duel."},
+{n:"Rafaela",r:"Support",l:["Roam"],d:"m",bt:"sp_heal",tg:{hl:3,cc:1},em:"Support",tl:["Agility","Pull Yourself Together","Focusing Mark"],sp:["Flicker","Revitalize"],bo:"Demon Shoes",rb:"Favor",co:["Flask of the Oasis","Enchanted Talisman"],note:"Ulti stun jarak jauh — setup pickoff, bukan cuma heal-bot."},
+{n:"Roger",r:"Fighter",l:["Jungle"],d:"p",bt:"mm_crit",tg:{bu:2,dp:2,dv:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Sprint"],bo:"Swift Boots",co:["Blade of Despair","Berserker's Fury"],note:"Wolf masuk buat burst, balik human buat kite — jangan diem di satu form."},
+{n:"Ruby",r:"Fighter",l:["EXP","Roam"],d:"p",bt:"fg_sus",tg:{cc:3,ss:3,tk:2},em:"Fighter",tl:["Vitality","Festival of Blood","Brave Smite"],sp:["Flicker","Petrify"],bo:"Tough Boots",co:["Haas's Claws","Queen's Wings"],note:"Lifesteal dari skill (125%) — makin rame musuh makin susah mati. Hook buat peel MM lu."},
+{n:"Saber",r:"Assassin",l:["Jungle","Roam"],d:"p",bt:"as_p",tg:{bu:3,cc:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Blade of the Heptaseas","Blade of Despair"],note:"Ulti lock 1 target — tugas lu cuma satu: hapus carry musuh dari war."},
+{n:"Selena",r:"Assassin",l:["Roam","Mid"],d:"m",bt:"as_m",tg:{bu:2,cc:3,pk:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",rb:"Dire Hit",co:["Genius Wand","Holy Crystal"],note:"Arrow dari fog (stun s/d 3 detik) → baru masuk form abyss."},
+{n:"Silvanna",r:"Fighter",l:["EXP","Roam"],d:"m",bt:"fg_mag",tg:{cc:2,bu:2,tk:1,dp:1},em:"Fighter",tl:["Vitality","Festival of Blood","Brave Smite"],sp:["Flicker","Petrify"],bo:"Tough Boots",co:["Clock of Destiny","Holy Crystal"],note:"Ulti kurung 1 orang — pilih target yang tim lu bisa follow-up."},
+{n:"Sora",r:"Fighter",l:["Jungle","EXP"],d:"p",bt:"as_p",tg:{bu:2,cc:2,dv:2,tk:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["War Axe","Hunter Strike"],note:"Full stack → pilih form: Thunder (burst assassin) atau Torrent (tanky CC) sesuai kebutuhan tim."},
+{n:"Sun",r:"Fighter",l:["EXP","Gold"],d:"p",bt:"fg_dmg",tg:{dp:3,tk:1},em:"Fighter",tl:["Swift","Festival of Blood","War Cry"],sp:["Flicker","Sprint"],bo:"Warrior Boots",co:["Demon Hunter Sword","Golden Staff"],note:"Clone split push nonstop — menang lewat turret, bukan teamfight."},
+{n:"Suyou",r:"Assassin",l:["Jungle","EXP"],d:"p",bt:"as_p",tg:{bu:2,dp:2,dv:2,cc:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Retribution","Flicker"],bo:"Warrior Boots",co:["Hunter Strike","War Axe"],note:"Weaving skill → enhanced basic → skill. Jangan spam skill doang."},
+{n:"Terizla",r:"Fighter",l:["EXP"],d:"p",bt:"fg_sus",tg:{tk:2,cc:2,dp:2,ss:1},em:"Fighter",tl:["Vitality","Festival of Blood","Brave Smite"],sp:["Petrify","Flicker"],bo:"Warrior Boots",co:["War Axe","Queen's Wings"],note:"Damage reduction naik dari HP hilang — lu paling kuat pas sekarat. Ulti tarik = setup tim."},
+{n:"Thamuz",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{dp:3,ss:3,tk:2},em:"Fighter",tl:["Firmness","Festival of Blood","War Cry"],sp:["Flicker","Vengeance"],bo:"Warrior Boots",co:["War Axe","Cursed Helmet"],note:"All-in pas ulti nyala (regen gede). Pungut scythe biar enhanced terus."},
+{n:"Tigreal",r:"Tank",l:["Roam"],d:"m",bt:"tk",tg:{tk:3,cc:3},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Vengeance"],bo:"Tough Boots",rb:"Encourage",co:["Dominance Ice","Immortality"],note:"Flicker+Ulti = sapu 3-5 orang. Simpan S2 buat dorong musuh balik pas kabur."},
+{n:"Uranus",r:"Tank",l:["EXP","Roam"],d:"m",bt:"tk",tg:{tk:3,ss:3,dp:1},em:"Tank",tl:["Vitality","Tenacity","Concussive Blast"],sp:["Flicker","Sprint"],bo:"Tough Boots",rb:"Encourage",co:["Oracle","Guardian Helmet"],note:"Stack regen = nyawa lu. Hati-hati: anti-heal musuh motong regen lu 50%."},
+{n:"Vale",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:3,cc:2,pk:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Tiap skill bisa di-upgrade damage atau CC — sesuaikan sama kebutuhan draft."},
+{n:"Valentina",r:"Mage",l:["Mid","EXP"],d:"m",bt:"mg_burst",tg:{bu:2,pk:2,cc:1,dv:1},em:"Mage",tl:["Rupture","Weapon Master","Temporal Reign"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Curi ulti musuh — hafalin ulti mana yang paling berharga di draft lawan."},
+{n:"Valir",r:"Mage",l:["Mid","Roam"],d:"m",bt:"mg_poke",tg:{pk:3,cc:2,dp:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Glowing Wand","Ice Queen Wand"],note:"Knockback = peel terbaik se-game — jaga MM lu dari dive."},
+{n:"Vexana",r:"Mage",l:["Mid"],d:"m",bt:"mg_burst",tg:{bu:2,cc:2,pk:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Flameshot"],bo:"Arcane Boots",co:["Lightning Truncheon","Holy Crystal"],note:"Kill pas ulti = puppet — snowball teamfight."},
+{n:"Wanwan",r:"Marksman",l:["Gold","Jungle"],d:"p",bt:"mm_as",tg:{dp:3,dv:3},em:"Marksman",tl:["Swift","Weapon Master","Weakness Finder"],sp:["Flicker","Purify"],bo:"Swift Boots",co:["Golden Staff","Corrosion Scythe"],note:"Kena semua 4 weakness → ulti unlock. Keep moving, jangan pernah diem."},
+{n:"X.Borg",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{dp:3,pk:2,td:2,ss:1},em:"Fighter",tl:["Vitality","Tenacity","War Cry"],sp:["Flicker","Sprint"],bo:"Tough Boots",co:["War Axe","Queen's Wings"],note:"Firaga armor = HP kedua; damage lu sebagian TRUE — tank musuh tetap kebakar."},
+{n:"Xavier",r:"Mage",l:["Mid"],d:"m",bt:"mg_poke",tg:{pk:3,bu:2},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Genius Wand","Holy Crystal"],note:"Ulti GLOBAL — pantau semua lane, snipe yang sekarat."},
+{n:"Yi Sun-shin",r:"Marksman",l:["Jungle","Gold"],d:"p",bt:"mm_crit",tg:{dp:2,bu:2,dv:1},em:"Marksman",tl:["Fatal","Weapon Master","Weakness Finder"],sp:["Retribution","Sprint"],bo:"Swift Boots",co:["Berserker's Fury","Great Dragon Spear"],note:"Ulti global = vision + poke sebelum objective. Longbow dari jauh, glaive pas deket."},
+{n:"Yin",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_dmg",tg:{bu:2,cc:2,dv:1},em:"Assassin",tl:["Rupture","Master Assassin","Killing Spree"],sp:["Flicker","Retribution"],bo:"Warrior Boots",co:["War Axe","Blade of Despair"],note:"Ulti culik 1v1 — pilih target yang KALAH duel lawan lu (mage/MM), bukan fighter sustain."},
+{n:"Yu Zhong",r:"Fighter",l:["EXP","Jungle"],d:"p",bt:"fg_sus",tg:{ss:3,dp:2,tk:2,cc:1,dv:1},em:"Fighter",tl:["Vitality","Festival of Blood","War Cry"],sp:["Flicker","Vengeance"],bo:"Warrior Boots",co:["War Axe","Queen's Wings"],note:"Sha residue penuh → S2 enhanced. Dragon form buat engage ronde kedua."},
+{n:"Yve",r:"Mage",l:["Mid"],d:"m",bt:"mg_poke",tg:{pk:3,cc:2,dp:1},em:"Mage",tl:["Rupture","Bargain Hunter","Lethal Ignition"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Glowing Wand","Holy Crystal"],note:"Galactic Aura: tap = damage, geser = slow. Main dari belakang frontline."},
+{n:"Zetian",r:"Mage",l:["Mid"],d:"m",bt:"mg_poke",tg:{pk:3,cc:2,bu:2,hl:1},em:"Mage",tl:["Rupture","Bargain Hunter","Impure Rage"],sp:["Flicker","Purify"],bo:"Arcane Boots",co:["Enchanted Talisman","Wishing Lantern"],note:"Passive anti-dive: shield + stun melee yang nyentuh. Ulti = MS tim + reveal semua musuh."},
+{n:"Zhask",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{pk:2,dp:3,bu:1},em:"Mage",tl:["Rupture","Weapon Master","Impure Rage"],sp:["Flicker","Purify"],bo:"Arcane Boots",co:["Glowing Wand","Divine Glaive"],note:"Spawn = turret portable — taruh di posisi aman, lu sendiri jangan maju."},
+{n:"Zhuxin",r:"Mage",l:["Mid","Gold"],d:"m",bt:"mg_dps",tg:{dp:3,pk:2,cc:1},em:"Mage",tl:["Rupture","Weapon Master","Impure Rage"],sp:["Flicker","Sprint"],bo:"Arcane Boots",co:["Glowing Wand","Concentrated Energy"],note:"Channel butterfly butuh posisi aman — berdiri di belakang tank."},
+{n:"Zilong",r:"Fighter",l:["EXP","Gold"],d:"p",bt:"fg_dmg",tg:{dp:2,bu:1,dv:2},em:"Fighter",tl:["Swift","Festival of Blood","Killing Spree"],sp:["Sprint","Flicker"],bo:"Swift Boots",co:["Golden Staff","Demon Hunter Sword"],note:"Flip backline musuh ke tim lu; ulti = split push ngebut."}
+];
+
+const HEROES = HEROES_A.concat(HEROES_B);
+// ==== ENGINE REKOMENDASI ====
+
+const THREAT_KEYS = ["tk","buP","buM","dp","cc","hl","ss","dv","pk","iv","td"];
+const THREAT_LABELS = {
+  tk:"Tanky", buP:"Burst Fisik", buM:"Burst Magic", dp:"DPS Basic Attack", cc:"CC Berat",
+  hl:"Heal/Shield Tim", ss:"Sustain/Regen", dv:"Dive/Backline", pk:"Poke Jauh",
+  iv:"Invisibility", td:"True Damage"
+};
+const LVL_LABEL = ["-","Ada","Tinggi","Ekstrem"];
+
+const SQUISHY = ["mm_as","mm_crit","mm_skill","mm_mag","mg_burst","mg_poke","mg_dps","as_p","as_m"];
+const MM_BT   = ["mm_as","mm_crit","mm_skill","mm_mag"];
+const MG_BT   = ["mg_burst","mg_poke","mg_dps"];
+const FG_BT   = ["fg_dmg","fg_sus","fg_mag"];
+const TANKY_BT= ["tk","sp_heal","sp_util"];
+
+function lvl(raw, cnt){
+  if (cnt <= 0) return 0;
+  if (raw >= Math.max(4, cnt*1.5)) return 3;
+  if (raw >= Math.max(2.5, cnt*0.9)) return 2;
+  if (raw >= 1) return 1;
+  return 0;
+}
+
+// enemies: array hero object; overrides: {key: 0|3|null}
+function threatProfile(enemies, overrides){
+  overrides = overrides || {};
+  const raw = {tk:0,buP:0,buM:0,dp:0,dpP:0,dpM:0,cc:0,hl:0,ss:0,dv:0,pk:0,iv:0,td:0};
+  let phys=0, mag=0;
+  enemies.forEach(e=>{
+    const t = e.tg || {};
+    raw.tk += t.tk||0; raw.cc += t.cc||0; raw.hl += t.hl||0; raw.ss += t.ss||0;
+    raw.dv += t.dv||0; raw.pk += t.pk||0; raw.iv += t.iv||0; raw.td += t.td||0;
+    const bu = t.bu||0, dp = t.dp||0;
+    if (e.d==="p"){ raw.buP += bu; raw.dpP += dp; }
+    else if (e.d==="m"){ raw.buM += bu; raw.dpM += dp; }
+    else { raw.buP += bu/2; raw.buM += bu/2; raw.dpP += dp/2; raw.dpM += dp/2; }
+    raw.dp += dp;
+    const w = 1 + bu/2 + dp/2 + (t.pk||0)/3;
+    if (e.d==="p") phys += w; else if (e.d==="m") mag += w; else { phys += w/2; mag += w/2; }
+  });
+  const cnt = enemies.length;
+  const P = { raw, cnt, physShare: (phys+mag)>0 ? phys/(phys+mag) : 0.5 };
+  P.magShare = 1 - P.physShare;
+  THREAT_KEYS.forEach(k=>{ P[k] = lvl(raw[k]||0, cnt); });
+  P.dpP = lvl(raw.dpP, cnt); P.dpM = lvl(raw.dpM, cnt);
+  // manual override (0 = matiin, 3 = paksa ekstrem)
+  THREAT_KEYS.forEach(k=>{
+    if (overrides[k] === 0) P[k] = 0;
+    if (overrides[k] === 3) { P[k] = 3; if(k==="buP"){P.physShare=Math.max(P.physShare,0.55);P.magShare=1-P.physShare;} if(k==="buM"){P.magShare=Math.max(P.magShare,0.55);P.physShare=1-P.magShare;} if(k==="dp"){P.dpP=Math.max(P.dpP,2);} }
+  });
+  P.hasCritMM = enemies.some(e=>e.bt==="mm_crit");
+  P.antiHealNeed = (P.hl>=2) || (P.hl + P.ss >= 3) || (overrides.hl===3) || (overrides.ss===3);
+  P.empty = cnt===0 && !Object.keys(overrides).some(k=>overrides[k]===3);
+  return P;
+}
+
+function isJungler(hero, lane){ return lane === "Jungle"; }
+
+// lane bebas: hero apa pun bisa roam — kasih blessing default sesuai gaya main
+function defaultBlessing(hero){
+  if (hero.rb) return hero.rb;
+  if (hero.bt==="sp_heal") return "Favor";
+  if (["as_p","as_m","fg_dmg"].includes(hero.bt)) return "Conceal";
+  if (MG_BT.includes(hero.bt) || MM_BT.includes(hero.bt)) return "Dire Hit";
+  return "Encourage";
+}
+
+// ---------- SPELL ----------
+function pickSpell(hero, lane, T){
+  const jung = isJungler(hero, lane);
+  const squishy = SQUISHY.includes(hero.bt);
+  let main, why, alt, altWhy, blessing=null, blessWhy=null;
+
+  if (jung){
+    main = "Retribution"; why = "Lu jungler — non-negotiable.";
+    const tankyJg = ["tk","fg_sus","fg_mag","sp_util","sp_heal"].includes(hero.bt);
+    if (tankyJg){ blessing="Behemoth Hunter's"; blessWhy="Curi HP scaling bonus HP lu — paling cocok jungler tanky (ini pengganti Bloody Retribution)."; }
+    else if (T.dv>=2){ blessing="Ice Hunter's"; blessWhy="Lawan banyak hero licin/dive — curi Move Speed biar bisa nempel/lepas."; }
+    else if (T.buP + T.buM >= 4){ blessing="Flame Hunter's"; blessWhy="Lawan burst — curi attack mereka pas duel."; }
+    else { blessing="Ice Hunter's"; blessWhy="Default paling aman: curi Move Speed buat ganking & ngejar kill."; }
+    alt = hero.sp[0]==="Retribution" ? hero.sp[1] : hero.sp[0];
+    altWhy = "Kalau lu ga jadi jungler.";
+  } else {
+    main = hero.sp[0]==="Retribution" ? (hero.sp[1]||"Flicker") : hero.sp[0];
+    why = "Default paling fleksibel buat " + hero.n + ".";
+    alt = (hero.sp[1] && hero.sp[1]!==main) ? hero.sp[1] : (main==="Flicker" ? "Sprint" : "Flicker");
+    altWhy = "Opsi kedua standar.";
+    if (T.cc>=2 && squishy){
+      if (T.cc>=3 && main!=="Purify"){
+        alt = main; altWhy = "Kalau lu pede sama positioning.";
+        main = "Purify"; why = "CC lawan EKSTREM — sekali kena lock lu mati. Purify = tombol hidup.";
+      } else if (main!=="Purify"){
+        alt = "Purify"; altWhy = "CC lawan berat — pertimbangkan serius, apalagi kalau lawan ada suppress/lock (Franco/Kaja/Saber).";
+      }
+    }
+    if (T.dv>=2 && MM_BT.includes(hero.bt) && main!=="Purify" && alt!=="Aegis"){
+      altWhy = "Assassin lawan bakal nyari lu — " + alt + " atau Aegis buat nahan burst pertama.";
+    }
+  }
+  return {main, why, alt, altWhy, blessing, blessWhy};
+}
+
+// ---------- BOOTS ----------
+function pickBoots(hero, T){
+  let b = hero.bo, why = ITEMS[hero.bo] ? ITEMS[hero.bo].e : "";
+  const melee = FG_BT.includes(hero.bt) || TANKY_BT.includes(hero.bt) || hero.bt==="as_p";
+  if (T.cc>=2){
+    const isMage = MG_BT.includes(hero.bt) || hero.bt==="as_m";
+    if (!isMage || T.cc>=3){
+      if (b!=="Tough Boots"){ b = "Tough Boots"; why = "CC lawan berat — resilience motong durasi stun/slow. Damage bisa dikejar dari item lain."; }
+      else why = "Udah pas: CC lawan berat, resilience wajib.";
+    } else {
+      why += " (CC lawan lumayan — kalau makin parah, swap ke Tough Boots.)";
+    }
+  } else if (melee && T.magShare>=0.62 && b==="Warrior Boots"){
+    b = "Tough Boots"; why = "Damage lawan dominan magic — magic def lebih kepake daripada armor.";
+  } else if (melee && T.physShare>=0.62 && b==="Tough Boots" && T.cc<2){
+    b = "Warrior Boots"; why = "Damage lawan dominan fisik — armor lebih kepake.";
+  }
+  return {item:b, why};
+}
+
+// ---------- TALENT ----------
+function pickTalents(hero, lane, T){
+  const tl = hero.tl.slice();
+  const whys = ["","",""];
+  const notes = [];
+  // Tier 3 adjust
+  if ((hero.bt==="mg_dps"||hero.bt==="mg_poke") && T.tk>=2 && tl[2]==="Lethal Ignition"){
+    tl[2] = "Impure Rage";
+    whys[2] = "Lawan tanky — Impure Rage mukul 4% Max HP: makin gendut musuh makin sakit.";
+  }
+  if (FG_BT.includes(hero.bt) && (T.buP+T.buM)>=4 && tl[1]==="Festival of Blood"){
+    notes.push("Lawan full burst: spell vamp kurang kepake (fight-nya cepet). Tenacity di Tier 2 bisa jadi opsi bertahan.");
+  }
+  if (TANKY_BT.includes(hero.bt) && T.dp>=2 && tl[1]!=="Tenacity"){
+    notes.push("DPS lawan tinggi — pastiin Tier 2 Tenacity kepasang.");
+  }
+  if (isJungler(hero,lane) && !["Wilderness Blessing","Seasoned Hunter","Master Assassin","Festival of Blood"].includes(tl[1])){
+    notes.push("Karena jungle: Wilderness Blessing (rotasi) atau Seasoned Hunter (secure Lord/Turtle) layak dipertimbangkan di Tier 2.");
+  }
+  if (MM_BT.includes(hero.bt) && T.dv>=2 && tl[2]==="Weakness Finder"){
+    whys[2] = "Makin penting karena lawan suka dive: basic attack lu slow 50% — peel diri sendiri.";
+  }
+  // default whys
+  if (!whys[0]) whys[0] = TALENTS[tl[0]] ? TALENTS[tl[0]].e : "";
+  if (!whys[1]) whys[1] = TALENTS[tl[1]] ? TALENTS[tl[1]].e : "";
+  if (!whys[2]) whys[2] = TALENTS[tl[2]] ? TALENTS[tl[2]].e : "";
+  return {tl, whys, notes};
+}
+
+// ---------- ITEM POOLS ----------
+const SCALE_POOL = {
+  mm_as:   ["Windtalker","Golden Staff","Corrosion Scythe","Demon Hunter Sword","Blade of Despair"],
+  mm_crit: ["Great Dragon Spear","Windtalker","Berserker's Fury","Blade of Despair"],
+  mm_skill:["Endless Battle","Sky Piercer","Blade of Despair","Great Dragon Spear"],
+  mm_mag:  ["Feather of Heaven","Holy Crystal","Genius Wand","Blood Wings"],
+  mg_burst:["Lightning Truncheon","Holy Crystal","Blood Wings","Genius Wand"],
+  mg_poke: ["Lightning Truncheon","Holy Crystal","Blood Wings","Genius Wand"],
+  mg_dps:  ["Concentrated Energy","Holy Crystal","Ice Queen Wand","Blood Wings"],
+  as_p:    ["Blade of Despair","Endless Battle","Sky Piercer","Blade of the Heptaseas"],
+  as_m:    ["Holy Crystal","Blood Wings","Lightning Truncheon","Starlium Scythe"],
+  fg_dmg:  ["Blade of Despair","Endless Battle","Hunter Strike","Sky Piercer"],
+  fg_sus:  ["Blade of Despair","Endless Battle","Hunter Strike"],
+  fg_mag:  ["Holy Crystal","Concentrated Energy","Glowing Wand","Starlium Scythe"],
+  tk:      ["Cursed Helmet","Guardian Helmet","Thunder Belt"],
+  sp_heal: ["Enchanted Talisman","Fleeting Time","Ice Queen Wand"],
+  sp_util: ["Fleeting Time","Oracle","Thunder Belt"]
+};
+
+function isMagicDealer(bt){ return MG_BT.includes(bt) || bt==="as_m" || bt==="fg_mag" || bt==="mm_mag"; }
+
+function antiTankItem(hero){
+  if (isMagicDealer(hero.bt)) return {item:"Divine Glaive", why:"Lawan tanky — magic pen % WAJIB, bonusnya makin gede kalau mereka stack magic def."};
+  if (hero.bt==="mm_as") return {item:"Malefic Gun", why:"Lawan tanky — pen 30% versi MM attack speed, plus nambah range."};
+  return {item:"Malefic Roar", why:"Lawan tanky — pen % WAJIB. Tanpa ini damage lu cuma gatel di tank."};
+}
+function antiHealItem(hero){
+  if (TANKY_BT.includes(hero.bt)) return {item:"Dominance Ice", why:"Ada heal/sustain gede di lawan — aura lu motong heal & shield mereka 50%. Nempel terus ke healer/lifesteal-nya."};
+  if (isMagicDealer(hero.bt)) return {item:"Glowing Wand", why:"Ada heal/sustain gede di lawan — Lifebane motong heal mereka + burn %HP."};
+  return {item:"Sea Halberd", why:"Ada heal/sustain gede di lawan — on-hit motong heal & shield 60%. Beli SEBELUM war besar pertama."};
+}
+
+// skor item defense berdasarkan ancaman
+function defCandidates(hero, T){
+  const c = [];
+  const add = (item, score, why)=>{ if(score>0.35) c.push({item, score, why}); };
+  add("Athena's Shield", T.buM*2.2 + T.magShare*1.2, "Burst magic lawan gede — kena magic sekali, 25% damage magic berikutnya ke-reduce.");
+  add("Radiant Armor", T.dpM*2.2 + (T.magShare>0.5 ? T.pk*1.1 : 0), "Damage magic lawan berulang (DPS/poke) — magic def numpuk tiap kena.");
+  add("Antique Cuirass", T.buP*2.2, "Burst fisik skill-based — tiap kena skill, attack musuh turun 6% (stack 3x).");
+  add("Blade Armor", T.dpP*1.9 + (T.hasCritMM?1.6:0), T.hasCritMM ? "Ada MM crit di lawan — reflect + crit mereka jadi makan diri sendiri." : "Basic attack fisik deras — reflect + slow penyerang.");
+  add("Chastise Pauldron", T.dpP*1.7 + (T.dp>=2?0.8:0), "DPS attack speed lawan — AS mereka dipotong ke 75% + lu dapet self-heal pas kritis.");
+  add("Dominance Ice", (T.hl*1.6 + T.ss*1.3) + T.dpP*0.5, "Anti-heal + potong attack speed — dobel fungsi lawan comp sustain.");
+  add("Immortality", 1.15 + (T.buP+T.buM)*0.45, "Second life — asuransi late game, apalagi lawan tipe pickoff.");
+  add("Guardian Helmet", 0.9 + T.pk*0.9, "Lawan poke — regen gede bikin lu ga perlu recall abis kena harass.");
+  add("Oracle", 0.75 + T.buM*0.7 + T.hl*0.4, "Hybrid def + shield/regen yang lu terima +30%.");
+  add("Cursed Helmet", 0.7, "Burn AoE — waveclear & damage pasif buat frontliner.");
+  add("Thunder Belt", 0.55 + T.dv*0.8, "True dmg + slow tiap 4 detik — peel buat lindungin backline.");
+  c.sort((a,b)=>b.score-a.score);
+  return c;
+}
+
+// slot defense buat carry (1 slot)
+function carryDefItem(hero, T){
+  const mm = MM_BT.includes(hero.bt);
+  const mg = MG_BT.includes(hero.bt) || hero.bt==="as_m";
+  if (mm){
+    if (T.dv>=2 && T.physShare>=0.45) return {item:"Wind of Nature", why:"Assassin fisik bakal lompat ke lu — aktifin = KEBAL damage fisik 2 detik, mereka pulang tangan kosong."};
+    if (T.buM>=2) return {item:"Rose Gold Meteor", why:"Burst magic lawan gede — shield otomatis pas HP 30%."};
+    if (T.buP>=2) return {item:"Wind of Nature", why:"Burst fisik lawan gede — aktif imun fisik 2 detik pas mereka all-in."};
+    return {item:"Immortality", why:"Slot aman late game — second life."};
+  }
+  if (mg){
+    if (T.dv>=2 || T.buP>=2 || T.buM>=2) return {item:"Winter Crown", why:"Lawan burst/dive — beku 2 detik kebal semua pas mereka lompat, tim lu balikin damage. Skill lu (DoT/summon) tetap jalan."};
+    return {item:"Immortality", why:"Slot aman late game — second life."};
+  }
+  // as_p
+  if (T.buM>=2) return {item:"Athena's Shield", why:"Burst magic lawan gede — biar lu ga mati duluan sebelum combo keluar."};
+  if (T.buP>=2) return {item:"Rose Gold Meteor", why:"Burst fisik lawan — shield 30% HP nyelametin combo lu."};
+  return {item:"Immortality", why:"Slot aman late game — masuk, mati, hidup lagi, keluar."};
+}
+
+function fill(used, list){
+  for (const it of list){ if(!used.has(it)) { used.add(it); return it; } }
+  return null;
+}
+
+// ---------- BUILD ----------
+function buildItems(hero, lane, T){
+  const used = new Set();
+  const out = [];
+  const push = (item, why, tag, phase)=>{ if(item && !used.has(item)){ used.add(item); out.push({item, why, tag, phase}); } };
+
+  const boots = pickBoots(hero, T);
+  push(boots.item, boots.why, "boots", "Early");
+
+  const scale = SCALE_POOL[hero.bt] || [];
+  const co = hero.co.slice();
+
+  if (TANKY_BT.includes(hero.bt)){
+    // roamer/tank: 2 core + 3 def by threat
+    push(co[0], (ITEMS[co[0]]||{}).e || "Core item " + hero.n + ".", "core", "Early");
+    let defs = defCandidates(hero, T).filter(d=>!used.has(d.item));
+    if (T.antiHealNeed && !used.has("Dominance Ice") && !defs.slice(0,3).some(d=>d.item==="Dominance Ice")){
+      defs = [{item:"Dominance Ice", score:99, why:antiHealItem(hero).why}].concat(defs.filter(d=>d.item!=="Dominance Ice"));
+    }
+    push(co[1], (ITEMS[co[1]]||{}).e || "Core item " + hero.n + ".", "core", "Mid");
+    let phase = ["Mid","Mid-Late","Late"];
+    defs.filter(d=>!used.has(d.item)).slice(0,3).forEach((d,i)=> push(d.item, d.why, "situasional", phase[i]||"Late"));
+    // fallback
+    while (out.length<6){ const f = fill(used, SCALE_POOL.tk.concat(["Immortality","Oracle","Athena's Shield","Antique Cuirass"])); if(!f) break; out.push({item:f, why:(ITEMS[f]||{}).e||"", tag:"situasional", phase:"Late"}); }
+    return out;
+  }
+
+  const isFighter = FG_BT.includes(hero.bt);
+  // CORE 2
+  push(co[0], (ITEMS[co[0]]||{}).e || "Core " + hero.n + ".", "core", "Early");
+  push(co[1], (ITEMS[co[1]]||{}).e || "Core " + hero.n + ".", "core", "Mid");
+
+  // FLEX A: anti-tank atau scaling
+  if (T.tk>=2){
+    const at = antiTankItem(hero);
+    push(at.item, at.why, "situasional", "Mid");
+  } else {
+    const f = fill(used, scale);
+    if (f) out.push({item:f, why:(ITEMS[f]||{}).e||"", tag:"damage", phase:"Mid"});
+  }
+
+  // FLEX B: anti-heal atau scaling kedua
+  if (T.antiHealNeed){
+    const ah = antiHealItem(hero);
+    if (!used.has(ah.item)) push(ah.item, ah.why, "situasional", "Mid-Late");
+    else { const f = fill(used, scale); if(f) out.push({item:f, why:(ITEMS[f]||{}).e||"", tag:"damage", phase:"Mid-Late"}); }
+  } else if (isFighter){
+    // fighter: def slot pertama
+    const defs = defCandidates(hero, T).filter(d=>!used.has(d.item) && d.item!=="Cursed Helmet");
+    if (T.buP>=2 && !used.has("Queen's Wings")) push("Queen's Wings", "Burst fisik lawan gede — HP<40%: damage diterima -30%, lu tetap hidup di tengah war.", "situasional", "Mid-Late");
+    else if (defs[0]) push(defs[0].item, defs[0].why, "situasional", "Mid-Late");
+  } else {
+    const f = fill(used, scale);
+    if (f) out.push({item:f, why:(ITEMS[f]||{}).e||"", tag:"damage", phase:"Mid-Late"});
+  }
+
+  // FLEX C: defensive
+  if (isFighter){
+    const defs = defCandidates(hero, T).filter(d=>!used.has(d.item) && d.item!=="Cursed Helmet");
+    if (defs[0]) push(defs[0].item, defs[0].why, "situasional", "Late");
+  } else {
+    const d = carryDefItem(hero, T);
+    if (!used.has(d.item)) push(d.item, d.why, "situasional", "Late");
+  }
+
+  // fallback biar selalu 6
+  while (out.length<6){
+    const f = fill(used, scale.concat(["Immortality","Blade of Despair","Holy Crystal","Athena's Shield"]));
+    if (!f) break;
+    out.push({item:f, why:(ITEMS[f]||{}).e||"", tag:"damage", phase:"Late"});
+  }
+  return out.slice(0,6);
+}
+
+// ---------- TIPS ----------
+function matchupTips(hero, T, enemies){
+  const tips = [];
+  const squishy = SQUISHY.includes(hero.bt);
+  if (T.tk>=2) tips.push({k:"tk", t:"Lawan tanky: fokus target squishy dulu. Tank mereka dicuekin aja sampai pen item lu jadi — jangan buang skill ke frontline."});
+  if (T.buP+T.buM>=3 && squishy) tips.push({k:"bu", t:"Lawan burst: jangan first-in. Tunggu skill kunci mereka keluar (pancing pakai frontline), baru lu masuk. Satu kesalahan posisi = mati."});
+  if (T.cc>=2) tips.push({k:"cc", t:"CC berat: gerak zigzag, jangan jalan di koridor lurus. Hafalin CD skill lock mereka — window abis mereka miss itu waktu lu agresif."});
+  if (T.antiHealNeed) tips.push({k:"hl", t:"Anti-heal itu TIMING: beli sebelum war besar pertama (menit 8-10), bukan setelah kalah war. Telat beli = war ke-2 juga kalah."});
+  if (T.dv>=2 && squishy) tips.push({k:"dv", t:"Ada diver: berdiri DEKAT frontline lu (bukan di belakang sendirian), simpan dash/escape buat defense, jangan dipakai buat poke."});
+  if (T.pk>=2) tips.push({k:"pk", t:"Lawan poke: jangan ladder war di area terbuka. Rotasi lewat semak, paksa fight jarak dekat di mana poke mereka ga sempat keluar."});
+  if (T.iv>=1) tips.push({k:"iv", t:"Ada hero invis/camo di lawan: jalan bareng tim, taruh AoE di semak sebelum masuk. Solo farming di jungle gelap = nyerahin diri."});
+  if (T.td>=2) tips.push({k:"td", t:"Lawan bawa TRUE damage (nembus semua def): jangan cuma numpuk armor — tambah Max HP (item HP gede) biar mereka butuh waktu lebih lama."});
+  if (T.ss>=2 && !T.antiHealNeed) tips.push({k:"ss", t:"Lawan sustain: jangan tukar damage pelan-pelan (mereka menang lama-lamaan). Burst cepat atau mundur."});
+  return tips.slice(0,5);
+}
+
+function swapNotes(hero, T, items){
+  const s = [];
+  const hasPen = items.some(i=>["Malefic Roar","Malefic Gun","Divine Glaive"].includes(i.item));
+  if (T.tk>=1 && !hasPen && !TANKY_BT.includes(hero.bt)){
+    const at = antiTankItem(hero);
+    s.push("Kalau frontline lawan mulai tebel di menit 12+: selipin " + at.item + " gantiin item damage terakhir.");
+  }
+  if (!TANKY_BT.includes(hero.bt)){
+    s.push("Sering mati sebelum ngefek? Majuin item defensif ke slot 4, geser damage ke belakang. Build hidup > build sultan.");
+    s.push("Late game full build: jual boots → ganti item ke-7 (damage/def sesuai kebutuhan) kalau match nya panjang.");
+  } else {
+    if (T.antiHealNeed) s.push("Dominance Ice naikin prioritas: beli sebelum menit 10 kalau healer lawan mulai keliatan ngefek.");
+    s.push("Urutan item defense fleksibel — beli sesuai siapa yang lagi fed di lawan, bukan urutan mati.");
+  }
+  return s;
+}
+
+// ---------- MAIN ----------
+function recommend(hero, lane, enemies, overrides){
+  const T = threatProfile(enemies, overrides);
+  const spell = pickSpell(hero, lane, T);
+  const tal = pickTalents(hero, lane, T);
+  const items = buildItems(hero, lane, T);
+  const tips = matchupTips(hero, T, enemies);
+  const swaps = swapNotes(hero, T, items);
+  const emblemWhy = {
+    "Tank":"HP + def + regen — lu hidup buat nyerap damage.",
+    "Assassin":"Pen + attack + MS — burst & mobilitas.",
+    "Mage":"Magic power + pen + CDR — paket damage skill.",
+    "Fighter":"Attack + lifesteal + def — paket brawler.",
+    "Marksman":"AS + attack + pen — DPS basic attack.",
+    "Support":"Healing + CDR + MS — utility maksimal.",
+    "Common":"Stat rata — fallback kalau emblem role belum ke-level."
+  }[hero.em] || "";
+  return { T, spell, talents: tal, items, tips, swaps,
+    emblem: { name: hero.em, base: (EMBLEMS[hero.em]||{}).base||"", why: emblemWhy },
+    roam: lane==="Roam" ? (function(){ const b = defaultBlessing(hero); return { bless: b, why: (ROAM[b]||"") }; })() : null
+  };
+}
+
+if (typeof module !== "undefined") module.exports = {threatProfile, recommend, HEROES, ITEMS, THREAT_LABELS, THREAT_KEYS, LVL_LABEL};
+// ==== ICON SVG INLINE (emblem, spell, item, blessing) ====
+const GLYPHS = {
+  sword:'<path d="M21 3c-2.8.2-5.4 1.4-7.3 3.3L7 13l4 4 6.7-6.7C19.6 8.4 20.8 5.8 21 3zM6 14l-3 4 3 3 4-3z"/>',
+  dagger:'<path d="M4 3l7 10 2-2L5 2zM20 3l-7 10-2-2L19 2zM4 21l7-6-1.5-1.5L3.5 19zM20 21l-7-6 1.5-1.5L20.5 19z"/>',
+  axe:'<path d="M12.7 6.3l5 5L7 22H2v-5zM14 5l5 5c2-1.5 3-4 3-6.5V2h-1.5C18 2 15.5 3 14 5z"/>',
+  spear:'<path d="M22 2h-4l-8.5 10.2 2.3 2.3L22 6V2zM8 14l2 2-6 6H2v-2z"/>',
+  trident:'<path d="M11 2v5H9V4H7v5c0 1.7 1.3 3 3 3h1v8h2v-8h1c1.7 0 3-1.3 3-3V4h-2v3h-2V2z"/>',
+  gun:'<path d="M2 8h15l5-2v7l-3-.8V15h-5v-2.5H9V17H5v-4H2z"/>',
+  scythe:'<path d="M4 2c5-1 12 0 16 4l-1.5 1.5C15 4.5 9.5 3.8 5 4.6zM17 7L4 20l2 2L19 9z"/>',
+  staffstar:'<path d="M12 2l1.8 3.6 3.7 1.4-3 2.6.9 3.9L12 11.4 8.6 13.5l.9-3.9-3-2.6 3.7-1.4zM11 13h2v9h-2z"/>',
+  wand:'<path d="M3 21l10-10 2 2L5 23zM15 3l1 2.5L18.5 6 16 7l-1 2.5L14 7l-2.5-1L14 5.5zM20 10l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+  orb:'<path d="M12 4a8 8 0 100 16 8 8 0 000-16zm0 2.5a5.5 5.5 0 110 11 5.5 5.5 0 010-11z"/><circle cx="12" cy="12" r="3"/>',
+  book:'<path d="M12 6C10 4.5 7 4 3 4v15c4 0 7 .5 9 2 2-1.5 5-2 9-2V4c-4 0-7 .5-9 2zm-1 12.6c-1.6-.7-3.6-1-6.5-1.1V5.6c2.9.1 4.9.5 6.5 1.4zm8.5-1.1c-2.9.1-4.9.4-6.5 1.1V7c1.6-.9 3.6-1.3 6.5-1.4z"/>',
+  crown:'<path d="M2.5 7.5L7 11l5-7 5 7 4.5-3.5L19.5 19h-15zM4.5 20.5h15V22h-15z"/>',
+  clock:'<path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 2a7 7 0 110 14 7 7 0 010-14zm1 2h-2v6l4.5 2.7 1-1.7-3.5-2.1z"/>',
+  wings:'<path d="M11 20C9.5 13 6 8.5 1.5 6.5 6.5 5.5 10.5 8 12 12c1.5-4 5.5-6.5 10.5-5.5C18 8.5 14.5 13 13 20z"/>',
+  shield:'<path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z"/>',
+  helmet:'<path d="M4 12a8 8 0 0116 0v8h-5v-6h-2v6h-2v-6H9v6H4z"/>',
+  chest:'<path d="M7 3h10l3 4-2 3v11h-3.5v-6h-5v6H5V10L3 7z"/>',
+  boot:'<path d="M8 2h6v9c0 1 .5 2 1.5 2.5L20 16c1.2.6 2 1.9 2 3.2V21H4v-8c0-1 .8-2 2-2h2z"/>',
+  heal:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm5 12h-3v3h-4v-3H7v-4h3V7h4v3h3z"/>',
+  lantern:'<path d="M9 2h6v2H9zM8 5h8l1.5 4c.4 1 .6 2.1.6 3.2 0 3.3-2.7 6-6.1 6-3.3 0-6-2.7-6-6 0-1.1.2-2.2.6-3.2zM11 19h2v3h-2z"/>',
+  snow:'<g fill="none" stroke="#fff" stroke-opacity=".93" stroke-width="2.2" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></g>',
+  bolt:'<path d="M13 2L4 14h6l-1 8 9-12h-6z"/>',
+  flame:'<path d="M12 2s6 5 6 11a6 6 0 11-12 0c0-2 1-4 2.5-5.5C9 9 10 10.5 11 10c1.5-.8.5-5 1-8z"/>',
+  eye:'<path d="M12 5C6.5 5 2.3 8.6 1 12c1.3 3.4 5.5 7 11 7s9.7-3.6 11-7c-1.3-3.4-5.5-7-11-7zm0 11a4 4 0 110-8 4 4 0 010 8z"/><circle cx="12" cy="12" r="2"/>',
+  feather:'<path d="M20 4c-7 0-13 4-15 11l-3 5 1.5 1 3-5h5c5 0 8.5-5 8.5-12zM7.5 14c2-4 5.5-7 9.5-8-2 4-5 7-9.5 8z"/>',
+  hourglass:'<path d="M6 2h12v3.5L13.5 12 18 18.5V22H6v-3.5L10.5 12 6 5.5z"/>',
+  claw:'<path d="M3 4c3 2 5 5 6 9l-2 1c-2-3-4-6-4-10zm6-1c3 2.5 5 6 5.5 10.5l-2 .7C11.5 10 10 6.5 9 3zm7 0c2.5 3 4 7 4 11.5l-2 .3c0-4-1-8-3.5-11z"/>',
+  skull:'<path fill-rule="evenodd" d="M12 2a8 8 0 00-8 8c0 2.5 1.2 4.8 3 6.3V20a2 2 0 002 2h6a2 2 0 002-2v-3.7c1.8-1.5 3-3.8 3-6.3a8 8 0 00-8-8zM8.5 13a2 2 0 110-4 2 2 0 010 4zm7 0a2 2 0 110-4 2 2 0 010 4zM11 15h2l-1 3z"/>',
+  crosshair:'<path d="M12 2a1 1 0 011 1v2.1A7 7 0 0118.9 11H21a1 1 0 010 2h-2.1A7 7 0 0113 18.9V21a1 1 0 01-2 0v-2.1A7 7 0 015.1 13H3a1 1 0 010-2h2.1A7 7 0 0111 5.1V3a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10zm0 3a2 2 0 110 4 2 2 0 010-4z"/>',
+  star:'<path d="M12 2l2.6 6.2 6.7.5-5.1 4.4 1.6 6.6L12 16l-5.8 3.7 1.6-6.6-5.1-4.4 6.7-.5z"/>',
+  sparkle:'<path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM19 15l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z"/>',
+  arrowup:'<path d="M12 3l7 7-2.1 2.1-3.4-3.4V21h-3V8.7l-3.4 3.4L5 10z"/>',
+  reflect:'<path d="M4 7h9l-2.5-2.5L12 3l5 5-5 5-1.5-1.5L13 9H4zM20 17h-9l2.5 2.5L12 21l-5-5 5-5 1.5 1.5L11 15h9z"/>',
+  drop:'<path d="M12 2s6 7 6 12a6 6 0 11-12 0c0-5 6-12 6-12z"/>',
+  ring:'<path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 3.5a5.5 5.5 0 110 11 5.5 5.5 0 010-11z"/>',
+  flask:'<path d="M9 2h6v2h-1v4l4.8 8.4A3 3 0 0116.2 21H7.8a3 3 0 01-2.6-4.6L10 8V4H9zM8.5 15h7l1.6 2.8a1 1 0 01-.9 1.7H7.8a1 1 0 01-.9-1.7z"/>',
+  wind:'<g fill="none" stroke="#fff" stroke-opacity=".93" stroke-width="2" stroke-linecap="round"><path d="M3 8h9a3 3 0 10-3-3M3 12h14a3 3 0 113 3M3 16h8a3 3 0 11-3 3"/></g>',
+  bow:'<g fill="none" stroke="#fff" stroke-opacity=".93" stroke-width="2" stroke-linecap="round"><path d="M6 3c6.5 2.5 6.5 15.5 0 18M6 3v18M6 12h11M13 8l4 4-4 4"/></g>'
+};
+
+// name → [glyph, warna atas, warna bawah]
+const ICON_MAP = {
+  // Emblem
+  "Tank":["shield","#3b82f6","#1e3a8a"], "Assassin":["dagger","#a855f7","#581c87"], "Mage":["orb","#22d3ee","#155e75"],
+  "Fighter":["axe","#f97316","#7c2d12"], "Marksman":["crosshair","#eab308","#713f12"], "Support":["heal","#22c55e","#14532d"], "Common":["star","#94a3b8","#334155"],
+  // Spell
+  "Retribution":["claw","#f59e0b","#7c2d12"], "Execute":["skull","#ef4444","#7f1d1d"], "Inspire":["arrowup","#fb923c","#7c2d12"],
+  "Sprint":["boot","#4ade80","#14532d"], "Revitalize":["heal","#34d399","#065f46"], "Aegis":["shield","#60a5fa","#1e3a8a"],
+  "Petrify":["eye","#a8a29e","#44403c"], "Purify":["sparkle","#e879f9","#701a75"], "Flameshot":["flame","#fb923c","#7c2d12"],
+  "Flicker":["bolt","#c084fc","#581c87"], "Arrival":["ring","#38bdf8","#0c4a6e"], "Vengeance":["reflect","#f87171","#7f1d1d"],
+  // Jungle blessing (patch 2.1.88: Ice/Flame/Behemoth Hunter's)
+  "Ice Hunter's":["snow","#7dd3fc","#0c4a6e"], "Flame Hunter's":["flame","#f87171","#7f1d1d"], "Behemoth Hunter's":["drop","#ef4444","#450a0a"],
+  // Roam blessing
+  "Conceal":["eye","#a78bfa","#4c1d95"], "Encourage":["arrowup","#fbbf24","#78350f"], "Favor":["heal","#f9a8d4","#9d174d"], "Dire Hit":["crosshair","#f87171","#7f1d1d"],
+  // Boots
+  "Warrior Boots":["boot","#f97316","#7c2d12"], "Tough Boots":["boot","#38bdf8","#075985"], "Magic Shoes":["boot","#a78bfa","#4c1d95"],
+  "Arcane Boots":["boot","#e879f9","#701a75"], "Swift Boots":["boot","#fbbf24","#92400e"], "Demon Shoes":["boot","#818cf8","#3730a3"], "Rapid Boots":["boot","#34d399","#065f46"],
+  // Attack
+  "Blade of Despair":["sword","#fb923c","#7c2d12"], "Berserker's Fury":["sword","#ef4444","#7f1d1d"], "Blade of the Heptaseas":["sword","#60a5fa","#1e3a8a"],
+  "Corrosion Scythe":["scythe","#a3e635","#3f6212"], "Demon Hunter Sword":["sword","#c084fc","#581c87"], "Endless Battle":["bolt","#f472b6","#831843"],
+  "Golden Staff":["staffstar","#fcd34d","#92400e"], "Great Dragon Spear":["spear","#f87171","#7f1d1d"], "Haas's Claws":["claw","#ef4444","#450a0a"],
+  "Hunter Strike":["dagger","#93c5fd","#1e40af"], "Malefic Gun":["gun","#fb7185","#881337"], "Malefic Roar":["claw","#fb923c","#7c2d12"],
+  "Rose Gold Meteor":["shield","#fda4af","#9f1239"], "Sea Halberd":["trident","#2dd4bf","#134e4a"], "War Axe":["axe","#f59e0b","#78350f"],
+  "Wind of Nature":["feather","#4ade80","#14532d"], "Windtalker":["wind","#67e8f9","#155e75"], "Sky Piercer":["spear","#7dd3fc","#0c4a6e"],
+  // Magic
+  "Blood Wings":["wings","#f43f5e","#881337"], "Clock of Destiny":["clock","#fcd34d","#78350f"], "Concentrated Energy":["orb","#fb7185","#9f1239"],
+  "Divine Glaive":["spear","#0ea5e9","#312e81"], "Enchanted Talisman":["book","#2dd4bf","#115e59"], "Feather of Heaven":["feather","#fbbf24","#854d0e"],
+  "Flask of the Oasis":["flask","#4ade80","#166534"], "Genius Wand":["wand","#c084fc","#6b21a8"], "Glowing Wand":["wand","#fb923c","#9a3412"],
+  "Holy Crystal":["orb","#f0abfc","#86198f"], "Ice Queen Wand":["snow","#7dd3fc","#0369a1"], "Lightning Truncheon":["bolt","#60a5fa","#1e3a8a"],
+  "Starlium Scythe":["scythe","#a78bfa","#4c1d95"], "Wishing Lantern":["lantern","#fbbf24","#854d0e"], "Winter Crown":["crown","#67e8f9","#0e7490"],
+  "Fleeting Time":["hourglass","#5eead4","#0f766e"],
+  // Defense
+  "Antique Cuirass":["chest","#fbbf24","#7c2d12"], "Athena's Shield":["shield","#93c5fd","#1e3a8a"], "Blade Armor":["chest","#f87171","#7f1d1d"],
+  "Brute Force Breastplate":["chest","#fb923c","#7c2d12"], "Chastise Pauldron":["chest","#fcd34d","#854d0e"], "Cursed Helmet":["skull","#a3e635","#365314"],
+  "Dominance Ice":["snow","#38bdf8","#1e3a8a"], "Guardian Helmet":["helmet","#fcd34d","#78350f"], "Immortality":["star","#fde047","#a16207"],
+  "Oracle":["eye","#2dd4bf","#134e4a"], "Queen's Wings":["wings","#7dd3fc","#0c4a6e"], "Radiant Armor":["shield","#fde047","#a16207"],
+  "Thunder Belt":["bolt","#facc15","#713f12"]
+};
+
+// ==== ICON ASLI (hotlink MLBB Wiki, fallback otomatis ke SVG) ====
+const FP = f => "https://mobile-legends.fandom.com/wiki/Special:FilePath/" + encodeURIComponent(f.replace(/ /g,"_")) + ".png";
+const EMB_FILES = {
+  "Tank":["Custom Tank Emblem","Tank Emblem"], "Assassin":["Custom Assassin Emblem","Assassin Emblem"],
+  "Mage":["Custom Mage Emblem","Mage Emblem"], "Fighter":["Custom Fighter Emblem","Fighter Emblem"],
+  "Marksman":["Custom Marksman Emblem","Marksman Emblem"], "Support":["Custom Support Emblem","Support Emblem"],
+  "Common":["Basic Common Emblem","Common Emblem"]
+};
+const BLESS_FILES = {
+  "Ice Hunter's":["Ice Hunter's","Ice Retribution"],
+  "Flame Hunter's":["Flame Hunter's","Flame Retribution"],
+  "Behemoth Hunter's":["Behemoth Hunter's","Bloody Retribution"]
+};
+function iconCandidates(name, kind){
+  if (kind==="emblem") return EMB_FILES[name] || [name];
+  if (kind==="bless") return BLESS_FILES[name] || [name];
+  if (kind==="spell") return name==="Inspire" ? ["Inspire (Battle Spell)","Battle Spell Inspire","Inspire"] : [name, name+" (Battle Spell)"];
+  return [name]; // item, boots, talent, roam
+}
+function attrEsc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function iconImg(name, size, kind){
+  size = size || 30;
+  const c = iconCandidates(name, kind);
+  const alts = attrEsc(JSON.stringify(c.slice(1).map(FP)));
+  return '<span class="icimg" style="width:'+size+'px;height:'+size+'px;">'
+    + '<img src="'+FP(c[0])+'" data-alts="'+alts+'" data-n="'+attrEsc(name)+'" data-s="'+size+'" '
+    + 'loading="lazy" referrerpolicy="no-referrer" alt="" onerror="icFail(this)">'
+    + '</span>';
+}
+function icFail(img){
+  try{
+    const alts = JSON.parse(img.dataset.alts || "[]");
+    if (alts.length){ img.dataset.alts = JSON.stringify(alts.slice(1)); img.src = alts[0]; return; }
+  }catch(e){}
+  const s = parseInt(img.dataset.s) || 30;
+  const w = img.closest(".icimg");
+  if (w) w.outerHTML = iconSVG(img.dataset.n, s);
+}
+
+function iconSVG(name, size){
+  size = size || 30;
+  const m = ICON_MAP[name] || ["star","#64748b","#334155"];
+  const gid = "lg_" + String(name).toLowerCase().replace(/[^a-z0-9]/g,"");
+  return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" aria-hidden="true">'
+    + '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1">'
+    + '<stop offset="0" stop-color="'+m[1]+'"/><stop offset="1" stop-color="'+m[2]+'"/></linearGradient></defs>'
+    + '<rect x="0.5" y="0.5" width="23" height="23" rx="5.5" fill="url(#'+gid+')" stroke="rgba(255,255,255,.22)"/>'
+    + '<g transform="translate(3.6 3.6) scale(0.7)" fill="#fff" fill-opacity=".93">' + (GLYPHS[m[0]]||GLYPHS.star) + '</g>'
+    + '</svg>';
+}
+// ==== UI ====
+const ROLE_COLORS = {Tank:"var(--tank)",Fighter:"var(--fighter)",Assassin:"var(--assassin)",Mage:"var(--mage)",Marksman:"var(--marksman)",Support:"var(--support)"};
+const ROLES = ["Semua","Tank","Fighter","Assassin","Mage","Marksman","Support"];
+const UI_KEYS = ["tk","buP","buM","dp","cc","hl","ss","dv","pk","iv","td"];
+const ALL_LANES = ["EXP","Jungle","Mid","Gold","Roam"];
+
+HEROES.sort((a,b)=>a.n.localeCompare(b.n));
+
+const S = { me:null, lane:null, enemies:[], ov:{}, fMe:"Semua", fEn:"Semua", qMe:"", qEn:"" };
+
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// ---- role filters ----
+function renderRoleFilter(elId, cur, setter){
+  const el = $(elId); el.innerHTML = "";
+  ROLES.forEach(r=>{
+    const c = document.createElement("span");
+    c.className = "rchip" + (cur===r ? " on" : "");
+    if (cur===r) c.style.background = r==="Semua" ? "var(--gold)" : ROLE_COLORS[r];
+    c.textContent = r;
+    c.onclick = ()=>{ setter(r); renderAll(); };
+    el.appendChild(c);
+  });
+}
+
+// ---- hero grids ----
+function heroMatch(h, q, f){
+  if (f!=="Semua" && h.r!==f) return false;
+  if (q && !h.n.toLowerCase().includes(q.toLowerCase())) return false;
+  return true;
+}
+function renderGrid(elId, mode){
+  const el = $(elId); el.innerHTML = "";
+  const q = mode==="me" ? S.qMe : S.qEn;
+  const f = mode==="me" ? S.fMe : S.fEn;
+  HEROES.forEach(h=>{
+    if (!heroMatch(h,q,f)) return;
+    const b = document.createElement("div");
+    let cls = "hbtn";
+    if (mode==="me"){
+      if (S.me===h.n) cls += " sel";
+      if (S.enemies.includes(h.n)) cls += " dis";
+    } else {
+      if (S.enemies.includes(h.n)) cls += " sel";
+      if (S.me===h.n) cls += " dis";
+      if (S.enemies.length>=5 && !S.enemies.includes(h.n)) cls += " dis";
+    }
+    b.className = cls;
+    const ini = h.n.split(/[\s-]/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+    b.innerHTML = '<span class="dot" style="background:'+(ROLE_COLORS[h.r]||"var(--tx3)")+'">'+ini+'</span>'+esc(h.n);
+    b.title = h.r + " · lane meta: " + h.l.join("/");
+    b.onclick = ()=>{
+      if (mode==="me"){
+        if (S.me===h.n){ S.me=null; S.lane=null; }
+        else { S.me=h.n; S.lane=h.l[0]; }
+      } else {
+        const i = S.enemies.indexOf(h.n);
+        if (i>=0) S.enemies.splice(i,1);
+        else if (S.enemies.length<5) S.enemies.push(h.n);
+      }
+      renderAll();
+    };
+    el.appendChild(b);
+  });
+  if (!el.children.length) el.innerHTML = '<span class="mini" style="grid-column:1/-1;padding:8px;">Ga ketemu — cek ejaan?</span>';
+}
+
+function heroByName(n){ return HEROES.find(h=>h.n===n); }
+
+function renderSel(){
+  const sm = $("selMe");
+  if (S.me){
+    const h = heroByName(S.me);
+    sm.innerHTML = '<span class="schip" style="border-color:'+(ROLE_COLORS[h.r]||"")+'"><b>'+esc(h.n)+'</b> <span class="mini">'+h.r+'</span> <span class="x" onclick="S.me=null;S.lane=null;renderAll()">✕</span></span>';
+  } else sm.innerHTML = '<span class="mini">Belum pilih hero.</span>';
+
+  const lr = $("laneRow"); lr.innerHTML = "";
+  if (S.me){
+    const h = heroByName(S.me);
+    const lab = document.createElement("span"); lab.className="mini"; lab.style.paddingTop="5px"; lab.textContent="Lane:"; lr.appendChild(lab);
+    ALL_LANES.forEach(L=>{
+      const c = document.createElement("span");
+      c.className = "lane" + (S.lane===L ? " on" : "");
+      c.innerHTML = esc(L) + (h.l.includes(L) ? '<span class="st">★</span>' : "");
+      c.title = h.l.includes(L) ? "Lane meta " + h.n : "Off-meta — tetap bisa, build & spell nyesuain";
+      c.onclick = ()=>{ S.lane=L; renderAll(); };
+      lr.appendChild(c);
+    });
+    const hint = document.createElement("span"); hint.className="mini"; hint.style.paddingTop="6px"; hint.innerHTML="★ = lane umum, tapi bebas pilih";
+    lr.appendChild(hint);
+  }
+
+  const se = $("selEn");
+  if (S.enemies.length){
+    se.innerHTML = S.enemies.map(n=>{
+      const h = heroByName(n);
+      return '<span class="schip" style="border-color:'+(ROLE_COLORS[h.r]||"")+'"><b>'+esc(n)+'</b> <span class="x" onclick="rmEn(\''+n.replace(/'/g,"\\'")+'\')">✕</span></span>';
+    }).join("") + '<button class="clear" onclick="S.enemies=[];renderAll()">Reset</button>';
+  } else se.innerHTML = '<span class="mini">Belum ada lawan dipilih.</span>';
+}
+function rmEn(n){ const i=S.enemies.indexOf(n); if(i>=0) S.enemies.splice(i,1); renderAll(); }
+
+// ---- threats ----
+function currentProfile(){
+  return threatProfile(S.enemies.map(heroByName), S.ov);
+}
+function renderThreats(T){
+  const el = $("threats"); el.innerHTML = "";
+  UI_KEYS.forEach(k=>{
+    const v = T[k]||0;
+    const ov = S.ov[k];
+    const d = document.createElement("div");
+    d.className = "tchip lv"+v + (ov===3?" forced":"") + (ov===0?" off":"");
+    const ovLab = ov===3 ? "PAKSA ON" : ov===0 ? "OFF" : "AUTO";
+    d.innerHTML = '<div class="tl"><span>'+THREAT_LABELS[k]+'</span><span class="ov">'+ovLab+'</span></div>'
+      + '<div class="lv">'+LVL_LABEL[v]+'</div><div class="bar"><i></i></div>';
+    d.onclick = ()=>{
+      if (S.ov[k]===undefined) S.ov[k]=3;
+      else if (S.ov[k]===3) S.ov[k]=0;
+      else delete S.ov[k];
+      renderAll();
+    };
+    el.appendChild(d);
+  });
+}
+
+// ---- output ----
+function renderOut(T){
+  const el = $("out");
+  if (!S.me){
+    el.innerHTML = '<div class="placeholder">⚔️<br><br>Pilih <b>hero lu</b> dulu di panel kiri.<br>Terus pilih hero lawan (atau paksa ON ancaman manual) — emblem, spell, dan build bakal nyesuain otomatis.</div>';
+    return;
+  }
+  const h = heroByName(S.me);
+  const lane = S.lane || h.l[0];
+  const R = recommend(h, lane, S.enemies.map(heroByName), S.ov);
+  let html = "";
+
+  // ringkasan matchup
+  const act = UI_KEYS.filter(k=>(T[k]||0)>=2).map(k=>THREAT_LABELS[k]+" ("+LVL_LABEL[T[k]]+")");
+  const offMeta = !h.l.includes(lane);
+  html += '<div class="vs">'
+    + '<b>'+esc(h.n)+'</b> <span class="mini">'+h.r+' · '+esc(lane)+(offMeta?' (off-meta — gaspol aja)':'')+'</span>'
+    + (S.enemies.length ? ' &nbsp;vs&nbsp; <b>'+S.enemies.map(esc).join(", ")+'</b>' : "")
+    + (act.length ? '<br><span class="mini">Ancaman utama: </span>'+act.join(" · ") : (T.empty ? '<br><span class="mini">Profil ancaman kosong — ini build default. Pilih lawan / paksa ON ancaman biar rekomendasinya nyesuain.</span>' : '<br><span class="mini">Ancaman lawan masih rendah — build mendekati default.</span>'))
+    + (h.note ? '<br><span class="mini">💡 '+esc(h.note)+'</span>' : "")
+    + '</div>';
+
+  // emblem
+  html += '<div class="ocard"><div class="ohead">'+iconImg(R.emblem.name,42,'emblem')
+    + '<div><div class="otag">Emblem</div><div class="big">'+R.emblem.name+'</div>'
+    + '<div class="why">'+esc(R.emblem.base)+' — '+esc(R.emblem.why)+'</div></div></div>';
+  R.talents.tl.forEach((t,i)=>{
+    html += '<div class="trow"><div class="tier">Tier '+(i+1)+'</div>'+iconImg(t,30,'talent')+'<div><div class="tname">'+esc(t)+'</div><div class="why">'+esc(R.talents.whys[i]||"")+'</div></div></div>';
+  });
+  if (R.talents.notes.length){
+    html += '<ul class="plain notes">'+R.talents.notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul>';
+  }
+  html += '</div>';
+
+  // spell
+  html += '<div class="ocard"><div class="otag" style="margin-bottom:8px;">Battle Spell</div><div class="spgrid">';
+  html += '<div class="spbox main"><div class="spflex">'+iconImg(R.spell.main,34,'spell')+'<div><div class="lab">Utama</div><div class="nm">'+esc(R.spell.main)+'</div><div class="why">'+esc(R.spell.why)+' '+esc(SPELLS[R.spell.main]||"")+'</div></div></div></div>';
+  html += '<div class="spbox"><div class="spflex">'+iconImg(R.spell.alt,34,'spell')+'<div><div class="lab">Alternatif</div><div class="nm">'+esc(R.spell.alt||"-")+'</div><div class="why">'+esc(R.spell.altWhy||"")+'</div></div></div></div>';
+  html += '</div>';
+  if (R.spell.blessing){
+    html += '<div class="spbox" style="margin-top:10px;border-color:var(--gold2);"><div class="spflex">'+iconImg(R.spell.blessing,34,'bless')+'<div><div class="lab">Jungle Blessing (Upgrade Retribution)</div><div class="nm" style="color:var(--gold)">'+esc(R.spell.blessing)+'</div><div class="why">'+esc(R.spell.blessWhy||"")+' '+esc(BLESSINGS[R.spell.blessing]||"")+'</div></div></div></div>';
+  }
+  if (R.roam){
+    html += '<div class="spbox" style="margin-top:10px;"><div class="spflex">'+iconImg(R.roam.bless,34)+'<div><div class="lab">Roam Blessing</div><div class="nm">'+esc(R.roam.bless)+'</div><div class="why">'+esc(R.roam.why)+'</div></div></div></div>';
+  }
+  if (!R.spell.blessing && lane!=="Jungle" && h.l.includes("Jungle")){
+    html += '<div class="mini" style="margin-top:9px;">ℹ️ '+esc(h.n)+' umum dipakai jungle — klik lane <b style="color:var(--gold)">Jungle</b> di panel kiri buat munculin Retribution + upgrade blessing-nya (Ice/Flame/Bloody).</div>';
+  }
+  html += '</div>';
+
+  // build
+  html += '<div class="ocard"><div class="otag" style="margin-bottom:4px;">Build Item (urutan beli)</div>';
+  R.items.forEach((it,i)=>{
+    html += '<div class="irow"><div class="icwrap"><span class="slotno">'+(i+1)+'</span>'+iconImg(it.item,34)+'</div>'
+      + '<div style="flex:1"><div class="iname">'+esc(it.item)
+      + ' <span class="phase">'+esc(it.phase)+'</span><span class="itag '+it.tag+'">'+(it.tag==="situasional"?"situasional — kenapa ↓":it.tag)+'</span></div>'
+      + '<div class="why">'+esc(it.why)+'</div></div></div>';
+  });
+  if (R.swaps.length){
+    html += '<div class="otag" style="margin:12px 0 2px;">Aturan Swap</div><ul class="plain">'+R.swaps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ul>';
+  }
+  html += '</div>';
+
+  // tips
+  if (R.tips.length){
+    html += '<div class="ocard"><div class="otag" style="margin-bottom:4px;">Cara Bawa Matchup Ini</div><ul class="plain">'
+      + R.tips.map(t=>'<li>'+esc(t.t)+'</li>').join("") + '</ul></div>';
+  }
+  el.innerHTML = html;
+}
+
+// ---- legend ----
+function renderLegend(){
+  $("legend").innerHTML = Object.keys(ROLE_COLORS).map(r=>'<span class="rl"><i style="background:'+ROLE_COLORS[r]+'"></i>'+r+'</span>').join("");
+}
+
+function renderAll(){
+  renderRoleFilter("rfMe", S.fMe, v=>S.fMe=v);
+  renderRoleFilter("rfEn", S.fEn, v=>S.fEn=v);
+  renderGrid("gridMe","me");
+  renderGrid("gridEn","en");
+  renderSel();
+  const T = currentProfile();
+  renderThreats(T);
+  renderOut(T);
+}
+
+$("qMe").addEventListener("input", e=>{ S.qMe=e.target.value; renderGrid("gridMe","me"); });
+$("qEn").addEventListener("input", e=>{ S.qEn=e.target.value; renderGrid("gridEn","en"); });
+
+renderLegend();
+renderAll();
+</script>
+</body>
+</html>
