@@ -208,7 +208,7 @@ const TALENTS = {
 };
 
 const SPELLS = {
-  "Retribution": "True dmg gede ke creep + akses jungle blessing (Ice/Flame/Bloody)",
+  "Retribution": "True dmg gede ke creep + akses jungle blessing (Ice/Flame/Behemoth Hunter's)",
   "Execute":     "True damage 100+10/lvl +13% lost HP target — finisher, nembus shield",
   "Flicker":     "Blink instan — escape/gap close paling fleksibel",
   "Purify":      "Hapus semua CC + imun 1.2s + 15% MS — jawaban lawan lockdown",
@@ -1106,7 +1106,7 @@ function renderOut(T){
     html += '<div class="spbox" style="margin-top:10px;"><div class="spflex">'+iconImg(R.roam.bless,34)+'<div><div class="lab">Roam Blessing</div><div class="nm">'+esc(R.roam.bless)+'</div><div class="why">'+esc(R.roam.why)+'</div></div></div></div>';
   }
   if (!R.spell.blessing && lane!=="Jungle" && h.l.includes("Jungle")){
-    html += '<div class="mini" style="margin-top:9px;">ℹ️ '+esc(h.n)+' umum dipakai jungle — klik lane <b style="color:var(--gold)">Jungle</b> di panel kiri buat munculin Retribution + upgrade blessing-nya (Ice/Flame/Bloody).</div>';
+    html += '<div class="mini" style="margin-top:9px;">ℹ️ '+esc(h.n)+' umum dipakai jungle — klik lane <b style="color:var(--gold)">Jungle</b> di panel kiri buat munculin Retribution + upgrade blessing-nya (Ice/Flame/Behemoth Hunter\'s).</div>';
   }
   html += '</div>';
 
