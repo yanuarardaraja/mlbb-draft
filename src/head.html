@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Lab · Solo — MLBB (Emblem, Spell & Item)</title>
+<meta name="description" content="Rekomendasi emblem, battle spell, dan build item MLBB yang nyesuaiin sama comp lawan. 133 hero, patch 2.1.90. Bagian dari Draft Lab.">
+<link rel="canonical" href="https://mlbb.mzonetour.com/build/">
+<meta property="og:title" content="Build Lab · Solo — MLBB">
+<meta property="og:description" content="Emblem, spell & build item adaptif ke comp lawan — 133 hero, patch 2.1.90.">
+<meta property="og:url" content="https://mlbb.mzonetour.com/build/">
+<style>
+  :root{
+    --bg:#0b1120; --panel:#131b2e; --panel2:#0f1626; --line:#263452; --line2:#1b2740;
+    --tx:#e7edf7; --tx2:#93a3bf; --tx3:#5f7191;
+    --gold:#fbbf24; --gold2:#b45309;
+    --tank:#3b82f6; --fighter:#f97316; --assassin:#a855f7; --mage:#22d3ee; --marksman:#eab308; --support:#22c55e;
+    --red:#f87171; --ok:#34d399;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg); color:var(--tx); font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif; font-size:14px; line-height:1.45;
+    background-image:radial-gradient(1200px 500px at 80% -10%, rgba(251,191,36,.06), transparent 60%), radial-gradient(900px 420px at -10% 0%, rgba(34,211,238,.05), transparent 55%);}
+  .wrap{max-width:1180px; margin:0 auto; padding:18px 14px 60px;}
+  header{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px; border-bottom:1px solid var(--line); padding-bottom:14px;}
+  h1{font-size:22px; letter-spacing:.06em; text-transform:uppercase;}
+  h1 .g{color:var(--gold);}
+  .sub{color:var(--tx2); font-size:12.5px; margin-top:3px;}
+  .patch{font-size:11px; color:var(--gold); border:1px solid var(--gold2); border-radius:999px; padding:3px 10px; white-space:nowrap; background:rgba(251,191,36,.07);}
+  .cols{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:14px; align-items:start;}
+  @media(max-width:920px){ .cols{grid-template-columns:1fr;} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px;}
+  .ptitle{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .ptitle .n{background:var(--gold); color:#1a1305; width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:11px;}
+  .search{width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--tx); border-radius:8px; padding:9px 12px; font-size:14px; outline:none; margin-bottom:8px;}
+  .search:focus{border-color:var(--gold2);}
+  .rolefilter{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;}
+  .rchip{font-size:11px; padding:4px 9px; border-radius:999px; border:1px solid var(--line); color:var(--tx2); cursor:pointer; user-select:none; background:var(--panel2);}
+  .rchip.on{color:#0b1120; font-weight:700;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(94px,1fr)); gap:6px; max-height:300px; overflow-y:auto; padding-right:4px;}
+  .grid::-webkit-scrollbar{width:8px;} .grid::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+  .hbtn{position:relative; background:var(--panel2); border:1px solid var(--line2); border-radius:8px; padding:8px 6px 7px; text-align:center; cursor:pointer; font-size:12px; color:var(--tx); user-select:none; transition:border-color .12s, background .12s;}
+  .hbtn:hover{border-color:var(--gold2);}
+  .hbtn .dot{display:block; width:22px; height:22px; border-radius:50%; margin:0 auto 5px; font-size:10.5px; font-weight:700; line-height:22px; color:#0b1120;}
+  .hbtn.sel{border-color:var(--gold); background:rgba(251,191,36,.10); box-shadow:0 0 0 1px var(--gold);}
+  .hbtn.dis{opacity:.32; pointer-events:none;}
+  .selrow{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; min-height:30px;}
+  .schip{display:inline-flex; align-items:center; gap:6px; background:var(--panel2); border:1px solid var(--line); padding:4px 8px; border-radius:999px; font-size:12px;}
+  .schip b{font-weight:600;}
+  .schip .x{cursor:pointer; color:var(--tx3); font-weight:700; padding:0 2px;}
+  .schip .x:hover{color:var(--red);}
+  .mini{font-size:11.5px; color:var(--tx3);}
+  .lanes{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
+  .lane{font-size:11.5px; padding:4px 12px; border:1px solid var(--line); border-radius:999px; color:var(--tx2); cursor:pointer; background:var(--panel2);}
+  .lane.on{border-color:var(--gold); color:var(--gold); background:rgba(251,191,36,.08); font-weight:600;}
+  .clear{font-size:11.5px; color:var(--tx3); cursor:pointer; border:1px solid var(--line); border-radius:999px; padding:4px 10px; background:none;}
+  .clear:hover{color:var(--red); border-color:var(--red);}
+  /* threat chips */
+  .threats{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:7px;}
+  .tchip{background:var(--panel2); border:1px solid var(--line2); border-radius:9px; padding:8px 10px; cursor:pointer; user-select:none; position:relative;}
+  .tchip .tl{font-size:11.5px; color:var(--tx2); display:flex; justify-content:space-between; gap:4px;}
+  .tchip .tl .ov{font-size:9.5px; letter-spacing:.08em; color:var(--tx3);}
+  .tchip .lv{font-size:13px; font-weight:700; margin-top:2px;}
+  .tchip .bar{height:4px; border-radius:2px; background:var(--line2); margin-top:6px; overflow:hidden;}
+  .tchip .bar i{display:block; height:100%; width:0%; border-radius:2px; transition:width .18s;}
+  .tchip.lv0 .lv{color:var(--tx3);} .tchip.lv0 .bar i{width:4%; background:var(--tx3);}
+  .tchip.lv1 .lv{color:var(--ok);} .tchip.lv1 .bar i{width:38%; background:var(--ok);}
+  .tchip.lv2 .lv{color:var(--gold);} .tchip.lv2 .bar i{width:70%; background:var(--gold);}
+  .tchip.lv3 .lv{color:var(--red);} .tchip.lv3 .bar i{width:100%; background:var(--red);}
+  .tchip.forced{border-color:var(--gold2);}
+  .tchip.off{opacity:.55;}
+  .thint{font-size:11px; color:var(--tx3); margin-top:9px;}
+  /* output */
+  .placeholder{border:1px dashed var(--line); border-radius:12px; padding:34px 18px; text-align:center; color:var(--tx3); font-size:13.5px;}
+  .ocard{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px;}
+  .ohead{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .otag{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--gold);}
+  .big{font-size:18px; font-weight:700;}
+  .why{color:var(--tx2); font-size:12.5px; margin-top:2px;}
+  .trow{display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line2); align-items:flex-start;}
+  .tier{flex:0 0 44px; font-size:10px; color:var(--tx3); letter-spacing:.08em; text-transform:uppercase; padding-top:3px;}
+  .tname{font-weight:600; font-size:13.5px;}
+  .spgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media(max-width:560px){ .spgrid{grid-template-columns:1fr;} }
+  .spbox{background:var(--panel2); border:1px solid var(--line2); border-radius:9px; padding:10px 12px;}
+  .spbox .lab{font-size:10px; letter-spacing:.12em; color:var(--tx3); text-transform:uppercase;}
+  .spbox .nm{font-size:15.5px; font-weight:700; margin:2px 0 3px;}
+  .spbox.main{border-color:var(--gold2);} .spbox.main .nm{color:var(--gold);}
+  .irow{display:flex; gap:10px; padding:9px 0; border-top:1px solid var(--line2); align-items:flex-start;}
+  .ic{border-radius:7px; flex:0 0 auto; display:block; box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .icimg{display:inline-block; flex:0 0 auto; border-radius:7px; overflow:hidden; background:#0f1626; box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .icimg img{width:100%; height:100%; object-fit:contain; display:block;}
+  .trow .icimg{margin-top:1px;}
+  .icwrap{position:relative; flex:0 0 34px; margin-top:2px;}
+  .icwrap .slotno{position:absolute; top:-6px; left:-7px; width:16px; height:16px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); color:var(--tx2); font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; z-index:1;}
+  .spflex{display:flex; gap:9px; align-items:flex-start;}
+  .spflex .ic{margin-top:2px;}
+  .lane .st{color:var(--gold); margin-left:3px;}
+  .iname{font-weight:600; font-size:13.5px; display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .phase{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--tx3); border:1px solid var(--line); padding:1px 7px; border-radius:999px;}
+  .itag{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; padding:1px 7px; border-radius:999px; font-weight:700;}
+  .itag.core{color:var(--mage); border:1px solid rgba(34,211,238,.4);}
+  .itag.situasional{color:var(--gold); border:1px solid rgba(251,191,36,.4);}
+  .itag.damage{color:var(--tx2); border:1px solid var(--line);}
+  .itag.boots{color:var(--tx2); border:1px solid var(--line);}
+  ul.plain{list-style:none;}
+  ul.plain li{padding:7px 0 7px 20px; position:relative; color:var(--tx2); font-size:12.5px; border-top:1px solid var(--line2);}
+  ul.plain li::before{content:"▸"; position:absolute; left:4px; color:var(--gold);}
+  .notes{margin-top:8px;}
+  .vs{font-size:12px; color:var(--tx2); background:var(--panel2); border:1px solid var(--line2); border-radius:8px; padding:8px 10px; margin-bottom:10px;}
+  .vs b{color:var(--tx);}
+  footer{margin-top:26px; border-top:1px solid var(--line); padding-top:12px; color:var(--tx3); font-size:11px; line-height:1.6;}
+  .rolelegend{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; font-size:10.5px; color:var(--tx3);}
+  .rl{display:inline-flex; align-items:center; gap:4px;}
+  .rl i{width:8px; height:8px; border-radius:50%; display:inline-block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Build <span class="g">Lab</span> · Solo</h1>
+      <div class="sub">Emblem · Battle Spell · Item — nyesuaiin sama comp lawan. Satu keluarga sama Draft Lab.</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <a class="patch" href="/" style="text-decoration:none;">← Draft Lab</a>
+      <div class="patch">Data: 133 hero · patch 2.1.90 · Juli 2026</div>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div id="colLeft">
+      <div class="panel">
+        <div class="ptitle"><span class="n">1</span> Hero Lu</div>
+        <input type="text" class="search" id="qMe" placeholder="Cari hero lu... (contoh: aamon, lylia)">
+        <div class="rolefilter" id="rfMe"></div>
+        <div class="grid" id="gridMe"></div>
+        <div class="selrow" id="selMe"><span class="mini">Belum pilih hero.</span></div>
+        <div class="lanes" id="laneRow"></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle"><span class="n">2</span> Tim Lawan <span class="mini" style="text-transform:none;letter-spacing:0;">(sampai 5 — boleh cuma 1-2 yang lu takutin)</span></div>
+        <input type="text" class="search" id="qEn" placeholder="Cari hero lawan...">
+        <div class="rolefilter" id="rfEn"></div>
+        <div class="grid" id="gridEn"></div>
+        <div class="selrow" id="selEn"><span class="mini">Belum ada lawan dipilih.</span></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle"><span class="n">3</span> Profil Ancaman <span class="mini" style="text-transform:none;letter-spacing:0;">(klik buat override)</span></div>
+        <div class="threats" id="threats"></div>
+        <div class="thint">AUTO = kebaca dari hero lawan · klik 1x = paksa ON (merah) · klik 2x = matiin · klik 3x = balik AUTO. Ga mau milih hero lawan? Langsung paksa ON ancaman yang lu rasain aja.</div>
+      </div>
+    </div>
+
+    <div id="colRight">
+      <div id="out"></div>
+    </div>
+  </div>
+
+  <footer>
+    <b>Catatan:</b> Rekomendasi = titik awal yang masuk akal, bukan kitab suci — sesuaikan sama gaya main & kondisi match. Angka & nama berbasis patch 2.1.90 (Juli 2026): upgrade Retribution sekarang Ice/Flame/<b>Behemoth</b> Hunter's (Bloody Retribution ganti nama di Season 41), Dire Hit di-rework (stack Force pas gerak), Necklace of Durance & Twilight Armor udah dihapus (anti-heal magic di Glowing Wand; anti-AS di Chastise Pauldron), Winter Truncheon = Winter Crown, Bloodlust Axe melebur ke War Axe.
+    <div class="rolelegend" id="legend"></div>
+  </footer>
+</div>
+<script>
