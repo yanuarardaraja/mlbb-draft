@@ -117,12 +117,15 @@
 <body>
 <div class="wrap">
   <header>
-    <div>
-      <h1>Build <span class="g">Lab</span> · Solo</h1>
-      <div class="sub">Emblem · Battle Spell · Item — nyesuaiin sama comp lawan. Satu keluarga sama Draft Lab.</div>
+    <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+      <a href="/" title="Ke menu utama" style="line-height:0;flex:0 0 auto;text-decoration:none;"><img src="/logo.png" alt="Rantin Pulang Sekolah" style="height:48px;width:auto;display:block;"></a>
+      <div style="min-width:0;">
+        <h1>Build <span class="g">Lab</span> · Solo</h1>
+        <div class="sub">Emblem · Battle Spell · Item — nyesuaiin sama comp lawan. Satu keluarga sama Draft Lab.</div>
+      </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <a class="patch" href="/" style="text-decoration:none;">← Draft Lab</a>
+      <a class="patch" href="/" style="text-decoration:none;">← Menu</a>
       <div class="patch">Data: 133 hero · patch 2.1.90 · Juli 2026</div>
     </div>
   </header>
@@ -968,37 +971,30 @@ function heroMatch(h, q, f){
 function renderGrid(elId, mode){
   const el = $(elId); el.innerHTML = "";
   const q = mode==="me" ? S.qMe : S.qEn;
+  if (!q || !q.trim()){ el.style.display="none"; return; }
+  el.style.display="";
   const f = mode==="me" ? S.fMe : S.fEn;
-  HEROES.forEach(h=>{
-    if (!heroMatch(h,q,f)) return;
+  let shown = 0;
+  for (const h of HEROES){
+    if (!heroMatch(h,q,f)) continue;
+    if (shown >= 8) break;
     const b = document.createElement("div");
     let cls = "hbtn";
-    if (mode==="me"){
-      if (S.me===h.n) cls += " sel";
-      if (S.enemies.includes(h.n)) cls += " dis";
-    } else {
-      if (S.enemies.includes(h.n)) cls += " sel";
-      if (S.me===h.n) cls += " dis";
-      if (S.enemies.length>=5 && !S.enemies.includes(h.n)) cls += " dis";
-    }
+    if (mode==="me"){ if (S.enemies.includes(h.n)) cls += " dis"; }
+    else { if (S.enemies.includes(h.n)) cls += " sel"; if (S.me===h.n) cls += " dis"; }
     b.className = cls;
     const ini = h.n.split(/[\s-]/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
     b.innerHTML = '<span class="dot" style="background:'+(ROLE_COLORS[h.r]||"var(--tx3)")+'">'+ini+'</span>'+esc(h.n);
-    b.title = h.r + " · lane meta: " + h.l.join("/");
+    b.title = h.r + " · lane: " + h.l.join("/");
     b.onclick = ()=>{
-      if (mode==="me"){
-        if (S.me===h.n){ S.me=null; S.lane=null; }
-        else { S.me=h.n; S.lane=h.l[0]; }
-      } else {
-        const i = S.enemies.indexOf(h.n);
-        if (i>=0) S.enemies.splice(i,1);
-        else if (S.enemies.length<5) S.enemies.push(h.n);
-      }
+      if (mode==="me"){ S.me=h.n; S.lane=h.l[0]; S.qMe=""; const ip=$("qMe"); if(ip)ip.value=""; }
+      else { if(!S.enemies.includes(h.n) && S.enemies.length<5) S.enemies.push(h.n); S.qEn=""; const ip=$("qEn"); if(ip)ip.value=""; }
       renderAll();
     };
     el.appendChild(b);
-  });
-  if (!el.children.length) el.innerHTML = '<span class="mini" style="grid-column:1/-1;padding:8px;">Ga ketemu — cek ejaan?</span>';
+    shown++;
+  }
+  if (!shown) el.innerHTML = '<span class="mini" style="grid-column:1/-1;padding:8px;">Ga ketemu — cek ejaan?</span>';
 }
 
 function heroByName(n){ return HEROES.find(h=>h.n===n); }
@@ -1149,6 +1145,58 @@ function renderAll(){
 
 $("qMe").addEventListener("input", e=>{ S.qMe=e.target.value; renderGrid("gridMe","me"); });
 $("qEn").addEventListener("input", e=>{ S.qEn=e.target.value; renderGrid("gridEn","en"); });
+
+
+/* ===== VOICE INPUT (pilih hero pakai suara) ===== */
+function voiceMatchHero(t){
+  const clean = x => String(x||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+  const n = clean(t);
+  if (!n) return null;
+  let h = HEROES.find(x=>clean(x.n)===n); if (h) return h.n;
+  h = HEROES.find(x=>clean(x.n).startsWith(n) || n.startsWith(clean(x.n))); if (h) return h.n;
+  h = HEROES.find(x=>clean(x.n).includes(n) || n.includes(clean(x.n))); if (h) return h.n;
+  const w = String(t||"").toLowerCase().split(/\s+/)[0];
+  if (w && w.length>=3){ h = HEROES.find(x=>x.n.toLowerCase().startsWith(w)); if (h) return h.n; }
+  return null;
+}
+function selectHeroVoice(name, mode){
+  if (mode==="me"){ S.me=name; const hh=heroByName(name); S.lane=hh?hh.l[0]:null; S.qMe=""; const ip=$("qMe"); if(ip)ip.value=""; }
+  else { if(!S.enemies.includes(name) && S.enemies.length<5) S.enemies.push(name); S.qEn=""; const ip=$("qEn"); if(ip)ip.value=""; }
+  renderAll();
+}
+function addMic(inputId, mode){
+  const inp = $(inputId); if(!inp) return;
+  const mic = document.createElement("button");
+  mic.type="button"; mic.textContent="🎤"; mic.title="Pilih hero pakai suara";
+  mic.style.cssText="flex:0 0 auto;width:36px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--card2,#241a22);color:var(--tx2,#e9c9d6);font-size:15px;cursor:pointer;line-height:1;";
+  const wrap = document.createElement("div");
+  wrap.style.cssText="display:flex;gap:6px;align-items:stretch;";
+  inp.parentNode.insertBefore(wrap, inp);
+  wrap.appendChild(inp); inp.style.flex="1"; wrap.appendChild(mic);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){ mic.style.opacity="0.4"; mic.disabled=true; mic.title="Browser ga support voice"; return; }
+  let rec=null, busy=false;
+  mic.onclick = ()=>{
+    if (busy && rec){ try{rec.stop();}catch(e){} return; }
+    rec = new SR(); rec.lang="id-ID"; rec.interimResults=false; rec.maxAlternatives=6;
+    busy=true; mic.textContent="●"; mic.style.background="var(--pink,#d94f8a)"; mic.style.color="#fff";
+    rec.onresult = ev=>{
+      const alts = [...ev.results[0]].map(a=>a.transcript.trim()).filter(Boolean);
+      let matched=null;
+      for (const t of alts){ const m=voiceMatchHero(t); if(m){matched=m;break;} }
+      if (matched){ selectHeroVoice(matched, mode); }
+      else if (alts[0]){
+        const qv=alts[0];
+        if (mode==="me"){ S.qMe=qv; inp.value=qv; renderGrid("gridMe","me"); }
+        else { S.qEn=qv; inp.value=qv; renderGrid("gridEn","en"); }
+      }
+    };
+    rec.onerror = ()=>{};
+    rec.onend = ()=>{ busy=false; mic.textContent="🎤"; mic.style.background="var(--card2,#241a22)"; mic.style.color="var(--tx2,#e9c9d6)"; };
+    try{ rec.start(); }catch(e){ busy=false; mic.textContent="🎤"; }
+  };
+}
+addMic("qMe","me"); addMic("qEn","en");
 
 renderLegend();
 renderAll();
